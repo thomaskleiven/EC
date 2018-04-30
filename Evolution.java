@@ -12,6 +12,8 @@ import java.util.Comparator;
 
 class Evolution{
 
+
+	public static final String ANSI_RED = "\u001B[31m";
 	private static double mutationRate = 0.90;
 
 	/**
@@ -69,14 +71,24 @@ class Evolution{
      int[] numsToGenerate           = IntStream.range(0, chromosomes.length).toArray();
      double[] discreteProbabilities = IntStream.range(0, chromosomes.length).mapToDouble(i -> (1.01 - Math.pow(chromosomes[i].getCost() / max.getCost(), 3))).toArray();
 
-     if(TSP.DEBUG){
-       System.out.printf("Probability Distribution: %s", Arrays.toString(discreteProbabilities));
-     }
 
      EnumeratedIntegerDistribution distribution =
          new EnumeratedIntegerDistribution(numsToGenerate, discreteProbabilities);
 
      int[] samples = distribution.sample(100);
+
+		 if(TSP.DEBUG){
+			 double[] distances = IntStream.range(0, chromosomes.length).mapToDouble(i -> chromosomes[i].getCost()).toArray();
+			 double[] distance_new_pop = IntStream.range(0, chromosomes.length).mapToDouble(i -> chromosomes[samples[i]].getCost()).toArray();
+			 System.out.printf("Probability Distribution: %s \n\n", Arrays.toString(discreteProbabilities));
+			 System.out.printf("Corresponding distances: %s\n\n", Arrays.toString(distances));
+			 System.out.printf("Selected individuals: %s\n\n", Arrays.toString(samples));
+			 System.out.printf("Distances to selected individuals: %s\n\n", Arrays.toString(distance_new_pop));
+			 System.out.printf("Sum of distances original population: %s\n\n", (double) Arrays.stream(distances).average().getAsDouble());
+			 System.out.printf("Sum of distances in new population: %s\n\n", (double) Arrays.stream(distance_new_pop).average().getAsDouble());
+			 System.out.printf("Selected chromosomes: %s\n\n", Arrays.toString(chromosomes));
+			 // System.out.printf("Selected chromosomes: %s\n\n", Arrays.toString(chromosomes));
+		 }
 
 		 Chromosome[] newChromosomes = chromosomes;
 
