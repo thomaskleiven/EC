@@ -12,7 +12,7 @@ import java.util.Comparator;
 
 class Evolution{
 
-	private static double mutationRate = 0.85;
+	private static double mutationRate = 0.90;
 
 	/**
 	 * The method used to generate a mutant of a chromosome
@@ -29,13 +29,21 @@ class Evolution{
 				System.out.printf("Cost original chromosome: %s\n", original.getCost());
 			}
 
-			int start = TSP.randomGenerator.nextInt(50);
-			int end = TSP.randomGenerator.nextInt(50);
+			int start = 0;
+			int end = 0;
+			int temp = 0;
 
-			int temp = cityIndexes[start];
+			for (int i = 0; i < 4; i++){
+				start = TSP.randomGenerator.nextInt(50);
+				end = TSP.randomGenerator.nextInt(50);
 
-			cityIndexes[start] = cityIndexes[end];
-			cityIndexes[end] = temp;
+				temp = cityIndexes[start];
+
+				cityIndexes[start] = cityIndexes[end];
+				cityIndexes[end] = temp;
+			}
+
+
 
       for (int i = 0; i<cityIndexes.length; ++i){
          newCities[i] = cityList[cityIndexes[i]];
@@ -59,7 +67,7 @@ class Evolution{
 		 Chromosome max = Arrays.stream(chromosomes).max(Comparator.comparingDouble(Chromosome::getCost)).get();
 
      int[] numsToGenerate           = IntStream.range(0, chromosomes.length).toArray();
-     double[] discreteProbabilities = IntStream.range(0, chromosomes.length).mapToDouble(i -> (1.01 - Math.pow(chromosomes[i].getCost() / max.getCost(), 6))).toArray();
+     double[] discreteProbabilities = IntStream.range(0, chromosomes.length).mapToDouble(i -> (1.01 - Math.pow(chromosomes[i].getCost() / max.getCost(), 3))).toArray();
 
      if(TSP.DEBUG){
        System.out.printf("Probability Distribution: %s", Arrays.toString(discreteProbabilities));
