@@ -92,6 +92,12 @@ class Evolution{
 		List<Integer> tour1 = Arrays.stream(parent1.getCities()).boxed().collect(Collectors.toList());
 		List<Integer> tour2 = Arrays.stream(parent2.getCities()).boxed().collect(Collectors.toList());
 
+		if (TSP.DEBUG){
+			System.out.printf("Parent1: %s \n", Arrays.toString(parent1.getCities()));
+
+			System.out.printf("Parent2: %s \n", Arrays.toString(parent2.getCities()));
+		}
+
 		      final int size = tour1.size();
 
 		      // choose two random numbers for the start and end indices of the slice
@@ -151,10 +157,6 @@ class Evolution{
 				 if (TSP.DEBUG) {
 					 System.out.printf("Start index: %s \n", start);
 					 System.out.printf("End index: %s \n", end);
-
-					 System.out.printf("Parent1: %s \n", Arrays.toString(parent1.getCities()));
-
-					 System.out.printf("Parent2: %s \n", Arrays.toString(parent2.getCities()));
 
 					 System.out.println("---------------");
 
