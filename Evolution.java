@@ -73,7 +73,7 @@ class Evolution{
 
 		 if (TSP.DEBUG){
 			 double[] distance = IntStream.range(0,100).mapToDouble(i->newChromosomes[i].getCost()).toArray();
-			 System.out.printf("Distance: %s\n", Arrays.toString(distance));
+			 System.out.printf("Distance selected population: %s\n\n", Arrays.toString(distance));
 		 }
 
 		 return newChromosomes;
@@ -151,8 +151,8 @@ class Evolution{
 					 newCities[i] = cityList[child1.get(i)];
 				 }
 
-				 parent1.setCities(child1.stream().mapToInt(i->i).toArray());
-				 parent1.calculateCost(newCities);
+				 // parent1.setCities(child1.stream().mapToInt(i->i).toArray());
+				 // parent1.calculateCost(newCities);
 
 				 if (TSP.DEBUG) {
 					 System.out.printf("Start index: %s \n", start);
@@ -168,7 +168,11 @@ class Evolution{
 					 System.out.printf("Number of unique elements in Parent2: %s\n", Arrays.stream(parent2.getCities()).distinct().count());
 			 	 }
 
-				 return parent1;
+				 Chromosome a = new Chromosome(newCities);
+				 a.setCities(child1.stream().mapToInt(i->i).toArray());
+				 a.calculateCost(newCities);
+
+				 return a;
 	 }
 
 	/**
@@ -181,19 +185,25 @@ class Evolution{
       Chromosome [] newPopulation = new Chromosome [population.length];
       for (int i = 0; i<population.length; i++){
 				 if (TSP.DEBUG) {
-				 System.out.printf("Individual number: %s\n", i);
-         	newPopulation[i] = ((double) TSP.randomGenerator.nextInt(100) / 100) > mutationRate ? Mutate(population[i], cityList) : population[i];
+				 	System.out.printf("Individual number: %s\n", i);
 			 	 }
+				 newPopulation[i] = ((double) TSP.randomGenerator.nextInt(100) / 100) > mutationRate ? Mutate(population[i], cityList) : population[i];
 				 int partner = TSP.randomGenerator.nextInt(population.length);
+				 if (TSP.DEBUG) {
+					 System.out.printf("Parent1: %s\n", i);
+					 System.out.printf("Parent2: %s\n", partner);
+				 }
 
 				 Chromosome child = Breed(population[i], population[partner], cityList);
 
-				 if (TSP.DEBUG) {
-					 System.out.printf("Second city: %s", cityList[1]);
-					 TSP.scanner.nextLine();
-			 	 }
-				 newPopulation[i] = child;
 
+				 if (TSP.DEBUG){
+					 System.out.printf("Current Individual: %s\n", Arrays.toString(newPopulation[i].getCities()));
+					 System.out.printf("Current Individual after breed: %s\n", Arrays.toString(child.getCities()));
+					 TSP.scanner.nextLine();
+				 }
+
+				 newPopulation[i] = child;
 			}
 
 			if (TSP.DEBUG){
