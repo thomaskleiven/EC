@@ -56,25 +56,25 @@ class Evolution{
 
 
 	 private static Chromosome[] selectNewPopulation(final Chromosome[] chromosomes){
-		 Chromosome max = Arrays.stream(chromosomes).max(Comparator.comparingDouble(Chromosome::getCost)).get();
 
-     int[] numsToGenerate           = IntStream.range(0, chromosomes.length).toArray();
-     double[] discreteProbabilities = IntStream.range(0, chromosomes.length).mapToDouble(i -> (1.01 - Math.pow(chromosomes[i].getCost() / max.getCost(), 6))).toArray();
+		 Chromosome[] newChromosomes = Stream.of(
+		 	Arrays.copyOfRange(chromosomes, 0, 10),
+		 	Arrays.copyOfRange(chromosomes, 0, 10),
+		 	Arrays.copyOfRange(chromosomes, 0, 10),
+		 	Arrays.copyOfRange(chromosomes, 0, 10),
+		 	Arrays.copyOfRange(chromosomes, 0, 10),
+		 	Arrays.copyOfRange(chromosomes, 0, 10),
+		 	Arrays.copyOfRange(chromosomes, 0, 10),
+		 	Arrays.copyOfRange(chromosomes, 0, 10),
+		 	Arrays.copyOfRange(chromosomes, 0, 10),
+		 	Arrays.copyOfRange(chromosomes, 0, 10)
+		 )
+		 .flatMap(Stream::of).toArray(Chromosome[]::new);
 
-     if(TSP.DEBUG){
-       System.out.printf("Probability Distribution: %s", Arrays.toString(discreteProbabilities));
-     }
-
-     EnumeratedIntegerDistribution distribution =
-         new EnumeratedIntegerDistribution(numsToGenerate, discreteProbabilities);
-
-     int[] samples = distribution.sample(100);
-
-		 Chromosome[] newChromosomes = chromosomes;
-
-     for(int i = 0; i < samples.length; i++){
-       newChromosomes[i] = chromosomes[samples[i]];
-     }
+		 if (TSP.DEBUG){
+			 double[] distance = IntStream.range(0,100).mapToDouble(i->newChromosomes[i].getCost()).toArray();
+			 System.out.printf("Distance: %s\n", Arrays.toString(distance));
+		 }
 
 		 return newChromosomes;
    }
@@ -194,6 +194,17 @@ class Evolution{
 			 	 }
 				 newPopulation[i] = child;
 
+			}
+
+			if (TSP.DEBUG){
+				System.out.printf("New population: %s \n\n", Arrays.toString(IntStream.range(0,100).mapToDouble(i->newPopulation[i].getCost()).toArray()));
+			}
+
+			Arrays.sort(newPopulation, (a,b) ->
+				Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
+
+			if (TSP.DEBUG){
+				System.out.printf("Sorted new population: %s \n\n", Arrays.toString(IntStream.range(0,100).mapToDouble(i->newPopulation[i].getCost()).toArray()));
 			}
 
       return selectNewPopulation(newPopulation);
