@@ -4,17 +4,17 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.lang.Math;
 import java.util.stream.IntStream;
-import org.apache.commons.math3.distribution.EnumeratedIntegerDistribution;
+import org.apache.commons.math3.distribution.EnumeratedDistribution;
+import org.apache.commons.math3.util.Pair;
 import java.util.Scanner;
 import java.util.Collections;
 import java.util.stream.Stream;
 import java.util.Comparator;
+import java.lang.reflect.Field;
 
 class Evolution{
 
-
-	public static final String ANSI_RED = "\u001B[31m";
-	private static double mutationRate = 0.90;
+	private static double mutationRate = 0.85;
 
 	/**
 	 * The method used to generate a mutant of a chromosome
@@ -31,21 +31,13 @@ class Evolution{
 				System.out.printf("Cost original chromosome: %s\n", original.getCost());
 			}
 
-			int start = 0;
-			int end = 0;
-			int temp = 0;
+			int start = TSP.randomGenerator.nextInt(50);
+			int end = TSP.randomGenerator.nextInt(50);
 
-			for (int i = 0; i < 4; i++){
-				start = TSP.randomGenerator.nextInt(50);
-				end = TSP.randomGenerator.nextInt(50);
+			int temp = cityIndexes[start];
 
-				temp = cityIndexes[start];
-
-				cityIndexes[start] = cityIndexes[end];
-				cityIndexes[end] = temp;
-			}
-
-
+			cityIndexes[start] = cityIndexes[end];
+			cityIndexes[end] = temp;
 
       for (int i = 0; i<cityIndexes.length; ++i){
          newCities[i] = cityList[cityIndexes[i]];
@@ -67,34 +59,36 @@ class Evolution{
 
 	 private static Chromosome[] selectNewPopulation(final Chromosome[] chromosomes){
 		 Chromosome max = Arrays.stream(chromosomes).max(Comparator.comparingDouble(Chromosome::getCost)).get();
+		 List<Pair<Integer, Double>> probabilities = new ArrayList<Pair<Integer, Double>>();
 
-     int[] numsToGenerate           = IntStream.range(0, chromosomes.length).toArray();
-     double[] discreteProbabilities = IntStream.range(0, chromosomes.length).mapToDouble(i -> (1.01 - Math.pow(chromosomes[i].getCost() / max.getCost(), 3))).toArray();
-
-
-     EnumeratedIntegerDistribution distribution =
-         new EnumeratedIntegerDistribution(numsToGenerate, discreteProbabilities);
-
-     int[] samples = distribution.sample(100);
-
-		 if(TSP.DEBUG){
-			 double[] distances = IntStream.range(0, chromosomes.length).mapToDouble(i -> chromosomes[i].getCost()).toArray();
-			 double[] distance_new_pop = IntStream.range(0, chromosomes.length).mapToDouble(i -> chromosomes[samples[i]].getCost()).toArray();
-			 System.out.printf("Probability Distribution: %s \n\n", Arrays.toString(discreteProbabilities));
-			 System.out.printf("Corresponding distances: %s\n\n", Arrays.toString(distances));
-			 System.out.printf("Selected individuals: %s\n\n", Arrays.toString(samples));
-			 System.out.printf("Distances to selected individuals: %s\n\n", Arrays.toString(distance_new_pop));
-			 System.out.printf("Sum of distances original population: %s\n\n", (double) Arrays.stream(distances).average().getAsDouble());
-			 System.out.printf("Sum of distances in new population: %s\n\n", (double) Arrays.stream(distance_new_pop).average().getAsDouble());
-			 System.out.printf("Selected chromosomes: %s\n\n", Arrays.toString(chromosomes));
-			 // System.out.printf("Selected chromosomes: %s\n\n", Arrays.toString(chromosomes));
+		 for (int i = 0; i < chromosomes.length; i++) {
+			 double probability = 1.01 - Math.pow(chromosomes[i].getCost() / max.getCost(), 2);
+			 if (i < 15){
+				 probability = probability + 5;
+			 }
+			 probabilities.add(new Pair<Integer,Double>(i, probability));
 		 }
 
-		 Chromosome[] newChromosomes = chromosomes;
+		 final EnumeratedDistribution<Integer> probabilityDistribution =
+		 	new EnumeratedDistribution<Integer> (probabilities);
 
-     for(int i = 0; i < samples.length; i++){
-       newChromosomes[i] = chromosomes[samples[i]];
-     }
+		 probabilityDistribution.reseedRandomGenerator(0);
+		 Object[] samples = probabilityDistribution.sample(100);
+
+		 Chromosome[] newChromosomes = new Chromosome[samples.length];
+		 for (int i = 0; i < samples.length; i++){
+			 newChromosomes[i] = chromosomes[(int) samples[i]];
+		 }
+
+		 if (TSP.DEBUG){
+			 System.out.printf("Probability distribution: %s\n\n", probabilityDistribution.getPmf());
+			 double[] distance_old_population = IntStream.range(0,100).mapToDouble(i->chromosomes[i].getCost()).toArray();
+			 double[] distance = IntStream.range(0,100).mapToDouble(i->newChromosomes[i].getCost()).toArray();
+			 System.out.printf("Distance old selected population: %s\n\n", Arrays.toString(distance_old_population));
+			 System.out.printf("Average distance old population: %s\n\n", Arrays.stream(distance_old_population).average());
+			 System.out.printf("Distance selected population: %s\n\n", Arrays.toString(distance));
+			 System.out.printf("Average distance new population: %s\n\n", Arrays.stream(distance).average());
+		 }
 
 		 return newChromosomes;
    }
@@ -171,8 +165,8 @@ class Evolution{
 					 newCities[i] = cityList[child1.get(i)];
 				 }
 
-				 parent1.setCities(child1.stream().mapToInt(i->i).toArray());
-				 parent1.calculateCost(newCities);
+				 // parent1.setCities(child1.stream().mapToInt(i->i).toArray());
+				 // parent1.calculateCost(newCities);
 
 				 if (TSP.DEBUG) {
 					 System.out.printf("Start index: %s \n", start);
@@ -188,7 +182,11 @@ class Evolution{
 					 System.out.printf("Number of unique elements in Parent2: %s\n", Arrays.stream(parent2.getCities()).distinct().count());
 			 	 }
 
-				 return parent1;
+				 Chromosome a = new Chromosome(newCities);
+				 a.setCities(child1.stream().mapToInt(i->i).toArray());
+				 a.calculateCost(newCities);
+
+				 return a;
 	 }
 
 	/**
@@ -201,19 +199,36 @@ class Evolution{
       Chromosome [] newPopulation = new Chromosome [population.length];
       for (int i = 0; i<population.length; i++){
 				 if (TSP.DEBUG) {
-				 System.out.printf("Individual number: %s\n", i);
-         	newPopulation[i] = ((double) TSP.randomGenerator.nextInt(100) / 100) > mutationRate ? Mutate(population[i], cityList) : population[i];
+				 	System.out.printf("Individual number: %s\n", i);
 			 	 }
+				 newPopulation[i] = ((double) TSP.randomGenerator.nextInt(100) / 100) > mutationRate ? Mutate(population[i], cityList) : population[i];
 				 int partner = TSP.randomGenerator.nextInt(population.length);
+				 if (TSP.DEBUG) {
+					 System.out.printf("Parent1: %s\n", i);
+					 System.out.printf("Parent2: %s\n", partner);
+				 }
 
 				 Chromosome child = Breed(population[i], population[partner], cityList);
 
-				 if (TSP.DEBUG) {
-					 System.out.printf("Second city: %s", cityList[1]);
-					 TSP.scanner.nextLine();
-			 	 }
-				 newPopulation[i] = child;
 
+				 if (TSP.DEBUG){
+					 System.out.printf("Current Individual: %s\n", Arrays.toString(newPopulation[i].getCities()));
+					 System.out.printf("Current Individual after breed: %s\n", Arrays.toString(child.getCities()));
+					 TSP.scanner.nextLine();
+				 }
+
+				 newPopulation[i] = child;
+			}
+
+			if (TSP.DEBUG){
+				System.out.printf("New population: %s \n\n", Arrays.toString(IntStream.range(0,100).mapToDouble(i->newPopulation[i].getCost()).toArray()));
+			}
+
+			Arrays.sort(newPopulation, (a,b) ->
+				Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
+
+			if (TSP.DEBUG){
+				System.out.printf("Sorted new population: %s \n\n", Arrays.toString(IntStream.range(0,100).mapToDouble(i->newPopulation[i].getCost()).toArray()));
 			}
 
       return selectNewPopulation(newPopulation);
