@@ -58,26 +58,6 @@ class Evolution{
 
 
 	 private static Chromosome[] selectNewPopulation(final Chromosome[] chromosomes){
-<<<<<<< HEAD
-
-		 Chromosome[] newChromosomes = Stream.of(
-		 	Arrays.copyOfRange(chromosomes, 0, 10),
-		 	Arrays.copyOfRange(chromosomes, 0, 10),
-		 	Arrays.copyOfRange(chromosomes, 0, 10),
-		 	Arrays.copyOfRange(chromosomes, 0, 10),
-		 	Arrays.copyOfRange(chromosomes, 0, 10),
-		 	Arrays.copyOfRange(chromosomes, 0, 10),
-		 	Arrays.copyOfRange(chromosomes, 0, 10),
-		 	Arrays.copyOfRange(chromosomes, 0, 10),
-		 	Arrays.copyOfRange(chromosomes, 0, 10),
-		 	Arrays.copyOfRange(chromosomes, 0, 10)
-		 )
-		 .flatMap(Stream::of).toArray(Chromosome[]::new);
-
-		 if (TSP.DEBUG){
-			 double[] distance = IntStream.range(0,100).mapToDouble(i->newChromosomes[i].getCost()).toArray();
-			 System.out.printf("Distance selected population: %s\n\n", Arrays.toString(distance));
-=======
 		 Chromosome max = Arrays.stream(chromosomes).max(Comparator.comparingDouble(Chromosome::getCost)).get();
 		 List<Pair<Integer, Double>> probabilities = new ArrayList<Pair<Integer, Double>>();
 
@@ -108,7 +88,6 @@ class Evolution{
 			 System.out.printf("Average distance old population: %s\n\n", Arrays.stream(distance_old_population).average());
 			 System.out.printf("Distance selected population: %s\n\n", Arrays.toString(distance));
 			 System.out.printf("Average distance new population: %s\n\n", Arrays.stream(distance).average());
->>>>>>> onepoint
 		 }
 
 		 return newChromosomes;
