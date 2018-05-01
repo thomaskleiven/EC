@@ -4,11 +4,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.lang.Math;
 import java.util.stream.IntStream;
-import org.apache.commons.math3.distribution.EnumeratedIntegerDistribution;
+import org.apache.commons.math3.distribution.EnumeratedDistribution;
+import org.apache.commons.math3.util.Pair;
 import java.util.Scanner;
 import java.util.Collections;
 import java.util.stream.Stream;
 import java.util.Comparator;
+import java.lang.reflect.Field;
 
 class Evolution{
 
@@ -56,6 +58,7 @@ class Evolution{
 
 
 	 private static Chromosome[] selectNewPopulation(final Chromosome[] chromosomes){
+<<<<<<< HEAD
 
 		 Chromosome[] newChromosomes = Stream.of(
 		 	Arrays.copyOfRange(chromosomes, 0, 10),
@@ -74,6 +77,38 @@ class Evolution{
 		 if (TSP.DEBUG){
 			 double[] distance = IntStream.range(0,100).mapToDouble(i->newChromosomes[i].getCost()).toArray();
 			 System.out.printf("Distance selected population: %s\n\n", Arrays.toString(distance));
+=======
+		 Chromosome max = Arrays.stream(chromosomes).max(Comparator.comparingDouble(Chromosome::getCost)).get();
+		 List<Pair<Integer, Double>> probabilities = new ArrayList<Pair<Integer, Double>>();
+
+		 for (int i = 0; i < chromosomes.length; i++) {
+			 double probability = 1.01 - Math.pow(chromosomes[i].getCost() / max.getCost(), 2);
+			 if (i < 15){
+				 probability = probability + 5;
+			 }
+			 probabilities.add(new Pair<Integer,Double>(i, probability));
+		 }
+
+		 final EnumeratedDistribution<Integer> probabilityDistribution =
+		 	new EnumeratedDistribution<Integer> (probabilities);
+
+		 probabilityDistribution.reseedRandomGenerator(0);
+		 Object[] samples = probabilityDistribution.sample(100);
+
+		 Chromosome[] newChromosomes = new Chromosome[samples.length];
+		 for (int i = 0; i < samples.length; i++){
+			 newChromosomes[i] = chromosomes[(int) samples[i]];
+		 }
+
+		 if (TSP.DEBUG){
+			 System.out.printf("Probability distribution: %s\n\n", probabilityDistribution.getPmf());
+			 double[] distance_old_population = IntStream.range(0,100).mapToDouble(i->chromosomes[i].getCost()).toArray();
+			 double[] distance = IntStream.range(0,100).mapToDouble(i->newChromosomes[i].getCost()).toArray();
+			 System.out.printf("Distance old selected population: %s\n\n", Arrays.toString(distance_old_population));
+			 System.out.printf("Average distance old population: %s\n\n", Arrays.stream(distance_old_population).average());
+			 System.out.printf("Distance selected population: %s\n\n", Arrays.toString(distance));
+			 System.out.printf("Average distance new population: %s\n\n", Arrays.stream(distance).average());
+>>>>>>> onepoint
 		 }
 
 		 return newChromosomes;
