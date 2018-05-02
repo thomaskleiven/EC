@@ -200,8 +200,6 @@ public final class TSP {
 
     private static City[] MoveCities(City[]cities) {
        City[] newPositions = new City[cities.length];
-       Random randomGenerator = new Random();
-       randomGenerator.setSeed(0);
 
        for(int i = 0; i < cities.length; i++) {
           int x = cities[i].getx();
@@ -234,7 +232,7 @@ public final class TSP {
         */
        ClassLoader loader = ClassLoader.getSystemClassLoader();
        loader.setDefaultAssertionStatus(true);
-        randomGenerator.setSeed(0);
+       randomGenerator.setSeed(0);
 
        DateFormat df = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
        Date today = Calendar.getInstance().getTime();
