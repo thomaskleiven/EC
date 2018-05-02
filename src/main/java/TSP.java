@@ -200,6 +200,8 @@ public final class TSP {
 
     private static City[] MoveCities(City[]cities) {
        City[] newPositions = new City[cities.length];
+       // Random randomGenerator = new Random();
+       // randomGenerator.setSeed(10);
 
        for(int i = 0; i < cities.length; i++) {
           int x = cities[i].getx();
