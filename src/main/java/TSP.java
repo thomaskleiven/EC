@@ -201,6 +201,7 @@ public final class TSP {
     private static City[] MoveCities(City[]cities) {
        City[] newPositions = new City[cities.length];
        Random randomGenerator = new Random();
+       randomGenerator.setSeed(0);
 
        for(int i = 0; i < cities.length; i++) {
           int x = cities[i].getx();
@@ -305,8 +306,8 @@ public final class TSP {
 
                 while (generation < 100) {
                    evolve();
-                   // if(generation % 5 == 0 )
-                   //    cities = MoveCities(originalCities); //Move from original cities, so they only move by a maximum of one unit.
+                   if(generation % 5 == 0 )
+                      cities = MoveCities(originalCities); //Move from original cities, so they only move by a maximum of one unit.
                    generation++;
 
                    Chromosome.sortChromosomes(chromosomes, populationSize);
