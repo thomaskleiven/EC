@@ -43,7 +43,6 @@ class Evolution{
       }
 
 			original.setCities(cityIndexes);
-			original.calculateCost(newCities);
 
 			if(TSP.DEBUG) {
 				System.out.printf("Swapped indexes: %s, %s\n", start, end);
@@ -138,11 +137,12 @@ class Evolution{
 			 System.out.printf("Number of unique elements in Parent2: %s\n", Arrays.stream(parent2.getCities()).distinct().count());
 	 	 }
 
-		 Chromosome a = new Chromosome(newCities);
-		 a.setCities(cityIndexesParent1);
-		 a.calculateCost(newCities);
+		 Chromosome child = new Chromosome(newCities, parent1.cityList);
 
-		 return a;
+		 child.setCities(cityIndexesParent1);
+		 child.calculateCost(newCities);
+
+		 return child;
 	 }
 
 
