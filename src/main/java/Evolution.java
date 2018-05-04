@@ -159,6 +159,38 @@ class Evolution{
 		 return child;
 	 }
 
+	 public static Chromosome[] tournament(Chromosome[] population){
+		 int tournament_size = 100;
+		 Chromosome[] competitors = new Chromosome[tournament_size];
+		 List<Pair<Integer, Double>> probabilities = new ArrayList<Pair<Integer, Double>>();
+
+		 for (int i = 0; i < tournament_size; i++){
+			 competitors[i] = population[TSP.randomGenerator.nextInt(100)];
+		 }
+
+		 Arrays.sort(competitors, (a,b) ->
+			 Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
+
+		 for (int i = 0; i < tournament_size; i++){
+			 double p = 0.5*Math.pow(1-0.5,i);
+			 probabilities.add(new Pair<Integer,Double>(i, p));
+		 }
+
+		 final EnumeratedDistribution<Integer> probabilityDistribution =
+		 new EnumeratedDistribution<Integer> (probabilities);
+
+
+ 		 probabilityDistribution.reseedRandomGenerator(0);
+ 		 Object[] samples = probabilityDistribution.sample(100);
+
+ 		 Chromosome[] newChromosomes = new Chromosome[samples.length];
+ 		 for (int i = 0; i < samples.length; i++){
+ 			 newChromosomes[i] = competitors[(int) samples[i]];
+ 		 }
+
+			return newChromosomes;
+	 }
+
 
 	/**
 	 * Evolve given population to produce the next generation.
@@ -202,6 +234,6 @@ class Evolution{
 				System.out.printf("Sorted new population: %s \n\n", Arrays.toString(IntStream.range(0,100).mapToDouble(i->newPopulation[i].getCost()).toArray()));
 			}
 
-      return selectNewPopulation(newPopulation);
+      return selectNewPopulation(tournament(newPopulation));
    }
 }

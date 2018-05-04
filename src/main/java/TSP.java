@@ -300,6 +300,7 @@ public final class TSP {
                 for (int x = 0; x < populationSize; x++) {
                    chromosomes[x] = new Chromosome(cities);
                    chromosomes[x].shuffleChromosome(cities);
+                   chromosomes[x].calculateCost(cities);
                 }
 
                 generation = 0;
