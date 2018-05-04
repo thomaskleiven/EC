@@ -299,6 +299,7 @@ public final class TSP {
                 chromosomes = new Chromosome[populationSize];
                 for (int x = 0; x < populationSize; x++) {
                    chromosomes[x] = new Chromosome(cities);
+                   chromosomes[x].shuffleChromosome(cities);
                 }
 
                 generation = 0;
