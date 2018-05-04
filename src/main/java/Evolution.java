@@ -180,8 +180,8 @@ class Evolution{
 					 System.out.printf("Number of unique elements in Parent2: %s\n", Arrays.stream(parent2.getCities()).distinct().count());
 			 	 }
 
-		 Chromosome child = new Chromosome(newCities, parent1.cityList);
-		 child.shuffleChromosome(newCities);
+		 Chromosome child = new Chromosome(tour1.stream().mapToInt(i->i).toArray());
+		// child.shuffleChromosome(newCities);
 
 		 child.setCities(child1.stream().mapToInt(i->i).toArray());
 		 child.calculateCost(newCities);
@@ -205,7 +205,7 @@ class Evolution{
 				 int partner = TSP.randomGenerator.nextInt(population.length);
 				 if (TSP.DEBUG) {
 					 System.out.printf("Parent1: %s\n", i);
-					 System.out.printf("Parent2: %s\n", partner);
+					 System.out.printf("Parent2: %s\n\n", partner);
 				 }
 
 				 Chromosome child = Breed(population[i], population[partner], cityList);

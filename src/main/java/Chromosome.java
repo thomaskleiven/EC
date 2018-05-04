@@ -45,7 +45,7 @@ final class Chromosome {
      */
     Chromosome(City[] cities) {}
 
-    Chromosome(City[] cities, int[] cityOrder) {
+    Chromosome(int[] cityOrder) {
       cityList = cityOrder;
     }
 
