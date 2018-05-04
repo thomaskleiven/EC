@@ -43,7 +43,6 @@ class Evolution{
       }
 
 			original.setCities(cityIndexes);
-			original.calculateCost(newCities);
 
 			if(TSP.DEBUG) {
 				System.out.printf("Swapped indexes: %s, %s\n", start, end);
@@ -169,12 +168,22 @@ class Evolution{
  					 System.out.printf("Number of unique elements in Parent2: %s\n", Arrays.stream(parent2.getCities()).distinct().count());
  			 	 }
 
+<<<<<<< HEAD
  				 Chromosome a = new Chromosome(newCities);
  				 a.setCities(child1.stream().mapToInt(i->i).toArray());
  				 a.calculateCost(newCities);
 
  				 return a;
  	 }
+=======
+		 Chromosome child = new Chromosome(newCities, parent1.cityList);
+
+		 child.setCities(cityIndexesParent1);
+		 child.calculateCost(newCities);
+
+		 return child;
+	 }
+>>>>>>> 693901b... Removed calculateCost() from construcor of Chromosome and Mutate
 
 
 	/**

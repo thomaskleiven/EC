@@ -43,25 +43,26 @@ final class Chromosome {
     /**
      * @param cities The order that this chromosome would visit the cities.
      */
-    Chromosome(City[] cities) {
-        Random generator = new Random();
-        generator.setSeed(0);
+    Chromosome(City[] cities) {}
 
-        cityList = new int[cities.length];
-        //cities are visited based on the order of an integer representation [o,n] of each of the n cities.
-        for (int x = 0; x < cities.length; x++) {
-            cityList[x] = x;
-        }
+    Chromosome(City[] cities, int[] cityOrder) {
+      cityList = cityOrder;
+    }
 
-        //shuffle the order so we have a random initial order
-        for (int y = 0; y < cityList.length; y++) {
-            int temp = cityList[y];
-            int randomNum = TSP.randomGenerator.nextInt(cityList.length);
-            cityList[y] = cityList[randomNum];
-            cityList[randomNum] = temp;
-        }
+    void shuffleChromosome(City[] cities) {
+      cityList = new int[cities.length];
+      //cities are visited based on the order of an integer representation [o,n] of each of the n cities.
+      for (int x = 0; x < cities.length; x++) {
+          cityList[x] = x;
+      }
 
-        calculateCost(cities);
+      //shuffle the order so we have a random initial order
+      for (int y = 0; y < cityList.length; y++) {
+          int temp = cityList[y];
+          int randomNum = TSP.randomGenerator.nextInt(cityList.length);
+          cityList[y] = cityList[randomNum];
+          cityList[randomNum] = temp;
+      }
     }
 
     /**
