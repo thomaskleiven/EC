@@ -12,6 +12,10 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.awt.*;
 import java.util.Scanner;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
 
 import javax.swing.*;
 
@@ -22,6 +26,8 @@ public final class TSP {
    public static boolean DEBUG = false;
    public static Scanner scanner = new Scanner(System.in);
    public static Random randomGenerator = new Random();
+   private static int[] bestOrder = new int[100];
+   private static int numlines = 0;
 
     /**
      * How many cities to use.
@@ -105,6 +111,48 @@ public final class TSP {
           e.printStackTrace();
        }
     }
+
+
+    /*
+     * Writing to an output file with the costs.
+     */
+    private static void writeArray() {
+       String filename = "initialization.out";
+       FileWriter out;
+
+       try {
+          out = new FileWriter(filename, true);
+          for (int i = 0; i < bestOrder.length; i++){
+            out.write(bestOrder[i] + "\n");
+          }
+          out.close();
+       }
+       catch (IOException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+       }
+    }
+
+    private static int[] readArray(){
+      try {
+        BufferedReader reader = new BufferedReader(new FileReader("initialization.out"));
+        while (reader.readLine() != null) numlines++;
+        reader.close();
+
+        int[] array = new int[numlines];
+
+        String[] lines = Files.lines(Paths.get("initialization.out")).toArray(String[]::new);
+        for (int i = 0; i < array.length; i++){
+          array[i] = Integer.parseInt(lines[i].trim());
+        }
+
+        return array;
+      } catch (Exception e) {
+        System.out.println("Failed");
+      }
+      return null;
+    }
+
 
     /*
      *  Deals with printing same content to System.out and GUI
@@ -236,6 +284,8 @@ public final class TSP {
        loader.setDefaultAssertionStatus(true);
        randomGenerator.setSeed(0);
 
+       // int[] init = readArray();
+
        DateFormat df = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
        Date today = Calendar.getInstance().getTime();
        String currentTime  = df.format(today);
@@ -293,13 +343,20 @@ public final class TSP {
              writeLog("Run Stats for experiment at: " + currentTime);
              for (int y = 1; y <= runs; y++) {
                 genMin = 0;
-                print(display,  "Run " + y + "\n");
+                // print(display,  "Run " + y + "\n");
 
              // create the initial population of chromosomes
                 chromosomes = new Chromosome[populationSize];
+
+                // int start_index = Math.max(Math.round(randomGenerator.nextInt(numlines - 5000) / 50)*50, 0);
+                // int end_index = start_index + 50;
+
                 for (int x = 0; x < populationSize; x++) {
                    chromosomes[x] = new Chromosome(cities);
                    chromosomes[x].shuffleChromosome(cities);
+
+                   // start_index += 50;
+                   // end_index += 50;
                 }
 
                 generation = 0;
@@ -313,17 +370,19 @@ public final class TSP {
 
                    Chromosome.sortChromosomes(chromosomes, populationSize);
                    double cost = chromosomes[0].getCost();
+
                    thisCost = cost;
 
                    if (thisCost < genMin || genMin == 0) {
                       genMin = thisCost;
+                      bestOrder = chromosomes[0].getCities();
                    }
 
                    NumberFormat nf = NumberFormat.getInstance();
                    nf.setMinimumFractionDigits(2);
                    nf.setMinimumFractionDigits(2);
 
-                   print(display, "Gen: " + generation + " Cost: " + (int) thisCost);
+                   // print(display, "Gen: " + generation + " Cost: " + (int) thisCost);
 
                    if(display) {
                       updateGUI();
@@ -342,7 +401,7 @@ public final class TSP {
 
                 sum +=  genMin;
 
-                print(display, "");
+                // print(display, "");
              }
 
              avg = sum / runs;
@@ -351,8 +410,8 @@ public final class TSP {
              print(display, "Statistics of minimum cost from each run \n");
              print(display, "Lowest: " + min + "\nAverage: " + avg + "\nHighest: " + max + "\n");
 
-             System.out.println("Num times path was calculated: "+Chromosome.getNumberOfPathLengthCalculations());
-
+             // System.out.println("Num times path was calculated: "+Chromosome.getNumberOfPathLengthCalculations());
+             System.out.println("Number of lines in database: "+numlines);
              /*
                 We expect to calculate the path length (populationSize*(runs+1)*100) times since there is 100 generations, 100 individuals and we have to calculate the path lengths for the initial pop and then for every run, therefore (runs+1)
              */

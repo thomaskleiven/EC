@@ -60,10 +60,7 @@ class Evolution{
 		 List<Pair<Integer, Double>> probabilities = new ArrayList<Pair<Integer, Double>>();
 
 		 for (int i = 0; i < chromosomes.length; i++) {
-			 double probability = 1.01 - Math.pow(chromosomes[i].getCost() / max.getCost(), 2);
-			 if (i < 15){
-				 probability = probability + 5;
-			 }
+			 double probability = Math.pow(0.94, i);
 			 probabilities.add(new Pair<Integer,Double>(i, probability));
 		 }
 
