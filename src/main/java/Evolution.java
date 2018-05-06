@@ -63,10 +63,7 @@ class Evolution{
 		 List<Pair<Integer, Double>> probabilities = new ArrayList<Pair<Integer, Double>>();
 
 		 for (int i = 0; i < chromosomes.length; i++) {
-			 double probability = 1.01 - Math.pow(chromosomes[i].getCost() / max.getCost(), 2);
-			 if (i < 15){
-				 probability = probability + 5;
-			 }
+			 double probability = Math.pow(0.95, i);
 			 probabilities.add(new Pair<Integer,Double>(i, probability));
 		 }
 
@@ -143,20 +140,20 @@ class Evolution{
  			 newCities[i] = cityList[cityIndexesParent1[i]];
  		}
 
+		Chromosome child = new Chromosome(parent1.getCities());
+
+		child.setCities(cityIndexesParent1);
+		child.calculateCost(newCities);
+
 		 if (TSP.DEBUG) {
 
 			 System.out.println("---------------");
 
-			 System.out.printf("Child cities: %s \n", Arrays.toString(parent1.getCities()));
-			 System.out.printf("Number of unique elements in Child: %s\n", Arrays.stream(parent1.getCities()).distinct().count());
+			 System.out.printf("Child cities: %s \n", Arrays.toString(child.getCities()));
+			 System.out.printf("Number of unique elements in Child: %s\n", Arrays.stream(child.getCities()).distinct().count());
 			 System.out.printf("Number of unique elements in Parent1: %s\n", Arrays.stream(parent1.getCities()).distinct().count());
 			 System.out.printf("Number of unique elements in Parent2: %s\n", Arrays.stream(parent2.getCities()).distinct().count());
 	 	 }
-
-		 Chromosome child = new Chromosome(parent1.getCities());
-
-		 child.setCities(cityIndexesParent1);
-		 child.calculateCost(newCities);
 
 		 return child;
 	 }
@@ -174,14 +171,17 @@ class Evolution{
 				 if (TSP.DEBUG) {
 				 	System.out.printf("Individual number: %s\n", i);
 			 	 }
+
 				 newPopulation[i] = ((double) TSP.randomGenerator.nextInt(100) / 100) > TSP.mutationRate ? Mutate(population[i], cityList) : population[i];
+
 				 int partner = TSP.randomGenerator.nextInt(population.length);
 				 if (TSP.DEBUG) {
 					 System.out.printf("Parent1: %s\n", i);
 					 System.out.printf("Parent2: %s\n\n", partner);
 				 }
 
-				 Chromosome child = Breed(population[i], population[partner], cityList);
+				 Chromosome simulatedChild = SimulatedAnnealing.localSearch(population[i], cityList);
+				 Chromosome child = Breed(simulatedChild, population[partner], cityList);
 
 
 				 if (TSP.DEBUG){

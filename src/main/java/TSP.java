@@ -277,7 +277,7 @@ public final class TSP {
              display = true;
           }
 
-          if (args.length > 1 && !args[1].equals("y")) {
+          if (args.length > 1 && !args[1].equals("y") && !args[1].equals("--debug")) {
              mutationRate = Double.valueOf(args[1]);
           } else {
             mutationRate = 0.69;
@@ -319,13 +319,14 @@ public final class TSP {
              writeLog("Run Stats for experiment at: " + currentTime);
              for (int y = 1; y <= runs; y++) {
                 genMin = 0;
-                // print(display,  "Run " + y + "\n");
+                print(display,  "Run " + y + "\n");
 
              // create the initial population of chromosomes
                 chromosomes = new Chromosome[populationSize];
                 for (int x = 0; x < populationSize; x++) {
                    chromosomes[x] = new Chromosome(cities);
                    chromosomes[x].shuffleChromosome(cities);
+                   chromosomes[x].calculateCost(cities);
                 }
 
                 generation = 0;
@@ -333,8 +334,8 @@ public final class TSP {
 
                 while (generation < 100) {
                    evolve();
-                   if(generation % 5 == 0 )
-                      cities = MoveCities(originalCities); //Move from original cities, so they only move by a maximum of one unit.
+                   // if(generation % 5 == 0 )
+                   //    cities = MoveCities(originalCities); //Move from original cities, so they only move by a maximum of one unit.
                    generation++;
 
                    Chromosome.sortChromosomes(chromosomes, populationSize);
@@ -349,7 +350,7 @@ public final class TSP {
                    nf.setMinimumFractionDigits(2);
                    nf.setMinimumFractionDigits(2);
 
-                   // print(display, "Gen: " + generation + " Cost: " + (int) thisCost);
+                   print(display, "Gen: " + generation + " Cost: " + (int) thisCost);
 
                    if(display) {
                       updateGUI();
