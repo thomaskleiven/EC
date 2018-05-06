@@ -21,7 +21,6 @@ class Evolution{
 	 */
 	public static Chromosome Mutate(Chromosome original, City [] cityList){
       int [] cityIndexes = original.getCities();
-      City [] newCities = new City[cityIndexes.length];
 
 			if(TSP.DEBUG){
 				System.out.printf("Original chromosome: %s\n", Arrays.toString(cityIndexes));
@@ -36,15 +35,12 @@ class Evolution{
 			cityIndexes[start] = cityIndexes[end];
 			cityIndexes[end] = temp;
 
-      for (int i = 0; i<cityIndexes.length; ++i){
-         newCities[i] = cityList[cityIndexes[i]];
-      }
-
 			original.setCities(cityIndexes);
 
 			Chromosome child = new Chromosome(original.getCities());
 
 			child.setCities(cityIndexes);
+			child.calculateCost(cityList);
 
 			if(TSP.DEBUG) {
 				System.out.printf("Swapped indexes: %s, %s\n", start, end);
@@ -52,7 +48,6 @@ class Evolution{
 				System.out.printf("Cost mutated chromosome: %s\n", child.getCost());
 				System.out.printf("Number of unique elements in mutated chromosome: %s\n", Arrays.stream(child.getCities()).distinct().count());
 			}
-
 
  		return child;
    }
@@ -134,16 +129,10 @@ class Evolution{
  			cityIndexesParent2[position] = temp[position];
  		}
 
- 		City [] newCities = new City[cityIndexesParent1.length];
-
- 		for (int i = 0; i<cityIndexesParent1.length; ++i){
- 			 newCities[i] = cityList[cityIndexesParent1[i]];
- 		}
-
 		Chromosome child = new Chromosome(parent1.getCities());
 
 		child.setCities(cityIndexesParent1);
-		child.calculateCost(newCities);
+		child.calculateCost(cityList);
 
 		 if (TSP.DEBUG) {
 
@@ -165,7 +154,7 @@ class Evolution{
 	 * @param cityList List of ciies, needed for the Chromosome constructor calls you will be doing when mutating and breeding Chromosome instances
 	 * @return The new generation of individuals.
 	 */
-   public static Chromosome [] Evolve(Chromosome [] population, City [] cityList){
+   public static Chromosome [] Evolve(Chromosome [] population, City [] cityList, int generation){
       Chromosome [] newPopulation = new Chromosome [population.length];
       for (int i = 0; i<population.length; i++){
 				 if (TSP.DEBUG) {
@@ -180,9 +169,12 @@ class Evolution{
 					 System.out.printf("Parent2: %s\n\n", partner);
 				 }
 
-				 Chromosome simulatedChild = SimulatedAnnealing.localSearch(population[i], cityList);
-				 Chromosome child = Breed(simulatedChild, population[partner], cityList);
+				 // Chromosome simulatedChild = SimulatedAnnealing.localSearch(population[i], cityList);
+				 Chromosome child = SimulatedAnnealing.localSearch(Breed(population[i], population[partner], cityList), cityList);
 
+				 // if (generation < 3){
+					//  child = SimulatedAnnealing.localSearch(child, cityList);
+				 // }
 
 				 if (TSP.DEBUG){
 					 System.out.printf("Current Individual: %s\n", Arrays.toString(newPopulation[i].getCities()));
@@ -204,6 +196,16 @@ class Evolution{
 				System.out.printf("Sorted new population: %s \n\n", Arrays.toString(IntStream.range(0,100).mapToDouble(i->newPopulation[i].getCost()).toArray()));
 			}
 
-      return selectNewPopulation(newPopulation);
+			Chromosome[] selectedPopulation = selectNewPopulation(newPopulation);
+
+			Arrays.sort(selectedPopulation, (a,b) ->
+				Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
+
+
+			if (TSP.DEBUG){
+				System.out.printf("Sorted selected population, last step: %s \n\n", Arrays.toString(IntStream.range(0,100).mapToDouble(i->selectedPopulation[i].getCost()).toArray()));
+			}
+
+      return selectedPopulation;
    }
 }

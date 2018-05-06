@@ -136,8 +136,8 @@ public final class TSP {
        System.out.println(content);
     }
 
-    public static void evolve() {
-       chromosomes = Evolution.Evolve(chromosomes, cities);
+    public static void evolve(int generation) {
+       chromosomes = Evolution.Evolve(chromosomes, cities, generation);
     }
 
     /**
@@ -280,7 +280,7 @@ public final class TSP {
           if (args.length > 1 && !args[1].equals("y") && !args[1].equals("--debug")) {
              mutationRate = Double.valueOf(args[1]);
           } else {
-            mutationRate = 0.69;
+            mutationRate = 0.81;
           }
 
           try {
@@ -327,13 +327,14 @@ public final class TSP {
                    chromosomes[x] = new Chromosome(cities);
                    chromosomes[x].shuffleChromosome(cities);
                    chromosomes[x].calculateCost(cities);
+                   // chromosomes[x] = randomGenerator.nextInt(100) > 80 ? SimulatedAnnealing.localSearch(chromosomes[x], cities) : chromosomes[x];
                 }
 
                 generation = 0;
                 double thisCost = 0.0;
 
                 while (generation < 100) {
-                   evolve();
+                   evolve(generation);
                    if(generation % 5 == 0 )
                       cities = MoveCities(originalCities); //Move from original cities, so they only move by a maximum of one unit.
                    generation++;
@@ -341,6 +342,10 @@ public final class TSP {
                    Chromosome.sortChromosomes(chromosomes, populationSize);
                    double cost = chromosomes[0].getCost();
                    thisCost = cost;
+
+                   if (TSP.DEBUG){
+                     System.out.printf("CityList best individual: %s", Arrays.toString(chromosomes[0].getCities()));
+                   }
 
                    if (thisCost < genMin || genMin == 0) {
                       genMin = thisCost;
