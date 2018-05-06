@@ -1,6 +1,5 @@
 import java.util.Arrays;
 import java.lang.Math;
-import org.apache.commons.lang3.SerializationUtils;
 
 public class SimulatedAnnealing {
 

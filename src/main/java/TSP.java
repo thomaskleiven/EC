@@ -334,8 +334,8 @@ public final class TSP {
 
                 while (generation < 100) {
                    evolve();
-                   // if(generation % 5 == 0 )
-                   //    cities = MoveCities(originalCities); //Move from original cities, so they only move by a maximum of one unit.
+                   if(generation % 5 == 0 )
+                      cities = MoveCities(originalCities); //Move from original cities, so they only move by a maximum of one unit.
                    generation++;
 
                    Chromosome.sortChromosomes(chromosomes, populationSize);
