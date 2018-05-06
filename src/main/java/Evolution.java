@@ -13,8 +13,6 @@ import java.util.Comparator;
 
 class Evolution{
 
-	private static double mutationRate = 0.70;
-
 	/**
 	 * The method used to generate a mutant of a chromosome
 	 * @param original The chromosome to mutate.
@@ -172,7 +170,7 @@ class Evolution{
 				 if (TSP.DEBUG) {
 				 	System.out.printf("Individual number: %s\n", i);
 			 	 }
-				 newPopulation[i] = ((double) TSP.randomGenerator.nextInt(100) / 100) > mutationRate ? Mutate(population[i], cityList) : population[i];
+				 newPopulation[i] = ((double) TSP.randomGenerator.nextInt(100) / 100) > TSP.mutationRate ? Mutate(population[i], cityList) : population[i];
 				 int partner = TSP.randomGenerator.nextInt(population.length);
 				 if (TSP.DEBUG) {
 					 System.out.printf("Parent1: %s\n", i);

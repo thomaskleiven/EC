@@ -22,6 +22,7 @@ public final class TSP {
    public static boolean DEBUG = false;
    public static Scanner scanner = new Scanner(System.in);
    public static Random randomGenerator = new Random();
+   public static double mutationRate = 0;
 
     /**
      * How many cities to use.
@@ -93,6 +94,24 @@ public final class TSP {
      */
     private static void writeLog(String content) {
        String filename = "results_crossover.out";
+       FileWriter out;
+
+       try {
+          out = new FileWriter(filename, true);
+          out.write(content + "\n");
+          out.close();
+       }
+       catch (IOException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+       }
+    }
+
+    /*
+     * Writing to an output file with the costs.
+     */
+    private static void writeAverage(String content, int uid) {
+       String filename = "Average/average_" + Double.toString(mutationRate) + ".out";
        FileWriter out;
 
        try {
@@ -234,7 +253,8 @@ public final class TSP {
         */
        ClassLoader loader = ClassLoader.getSystemClassLoader();
        loader.setDefaultAssertionStatus(true);
-       randomGenerator.setSeed(0);
+       // randomGenerator.setSeed(0);
+       int uid = randomGenerator.nextInt(99999999);
 
        DateFormat df = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
        Date today = Calendar.getInstance().getTime();
@@ -255,6 +275,12 @@ public final class TSP {
 
           if (args.length > 1 && args[1].equals("y")) {
              display = true;
+          }
+
+          if (args.length > 1 && !args[1].equals("y")) {
+             mutationRate = Double.valueOf(args[1]);
+          } else {
+            mutationRate = 0.69;
           }
 
           try {
@@ -293,7 +319,7 @@ public final class TSP {
              writeLog("Run Stats for experiment at: " + currentTime);
              for (int y = 1; y <= runs; y++) {
                 genMin = 0;
-                print(display,  "Run " + y + "\n");
+                // print(display,  "Run " + y + "\n");
 
              // create the initial population of chromosomes
                 chromosomes = new Chromosome[populationSize];
@@ -323,7 +349,7 @@ public final class TSP {
                    nf.setMinimumFractionDigits(2);
                    nf.setMinimumFractionDigits(2);
 
-                   print(display, "Gen: " + generation + " Cost: " + (int) thisCost);
+                   // print(display, "Gen: " + generation + " Cost: " + (int) thisCost);
 
                    if(display) {
                       updateGUI();
@@ -342,10 +368,11 @@ public final class TSP {
 
                 sum +=  genMin;
 
-                print(display, "");
+                // print(display, "");
              }
 
              avg = sum / runs;
+             // writeAverage(String.valueOf(avg), uid);
              print(display, "Statistics after " + runs + " runs");
              print(display, "Solution found after " + generation + " generations." + "\n");
              print(display, "Statistics of minimum cost from each run \n");
