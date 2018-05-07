@@ -253,7 +253,7 @@ public final class TSP {
         */
        ClassLoader loader = ClassLoader.getSystemClassLoader();
        loader.setDefaultAssertionStatus(true);
-       // randomGenerator.setSeed(0);
+       randomGenerator.setSeed(0);
        int uid = randomGenerator.nextInt(99999999);
 
        DateFormat df = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
