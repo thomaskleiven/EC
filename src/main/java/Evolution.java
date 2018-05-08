@@ -22,31 +22,7 @@ class Evolution{
 	 * @return Mutated chromosome.
 	 */
 	public static Chromosome Mutate(Chromosome original, City [] cityList){
-      int [] cityIndexes = original.getCities();
-
-			int start = TSP.randomGenerator.nextInt(50);
-			int end = TSP.randomGenerator.nextInt(50);
-			start = Math.min(start, end);
-			end = Math.max(start, end);
-
-			int half = start + ((end + 1) - start) / 2;
-			int endCount = end;
-
-			for (int startCount=start; startCount<half; startCount++){
-				int store = cityIndexes[startCount];
-				cityIndexes[startCount] = cityIndexes[endCount];
-				cityIndexes[endCount] = store;
-				endCount--;
-			}
-
-			for (int startCount = start; startCount < half; startCount++){
-				int store = cityIndexes[startCount];
-				cityIndexes[startCount] = cityIndexes[endCount];
-				cityIndexes[endCount] = store;
-				endCount--;
- 			}
-
- 		  return new Chromosome(cityIndexes);
+ 		  return Utils.RSM(original.getCities());
    }
 
 
