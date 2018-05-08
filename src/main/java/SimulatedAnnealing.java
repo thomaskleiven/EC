@@ -23,10 +23,8 @@ public class SimulatedAnnealing {
       System.out.printf("Original cost: %s \n", original.getCost());
     }
 
-    double coolingRate = 0.02;
+    double coolingRate = 0.00001;
     int[] originalCityIndexes = original.getCities();
-
-    City[] bestCities = new City[originalCityIndexes.length];
     int[] bestTour = new int[originalCityIndexes.length];
 
     Chromosome bestChromosome = new Chromosome(original.getCities());
@@ -34,7 +32,7 @@ public class SimulatedAnnealing {
 
     while (temp > 1){
       int[] newTour = Arrays.copyOfRange(originalCityIndexes, 0, originalCityIndexes.length);
-      
+
       int tour1 = TSP.randomGenerator.nextInt(50);
       int tour2 = TSP.randomGenerator.nextInt(50);
 
@@ -66,12 +64,6 @@ public class SimulatedAnnealing {
       temp *= 1 - coolingRate;
     }
 
-    if (TSP.DEBUG){
-      System.out.println("Original cost: " + original.getCost());
-      System.out.println("New cost: " + bestChromosome.getCost());
-      // TSP.scanner.nextLine();
-    }
-
-    return bestChromosome;
+    return bestChromosome.getCost() < original.getCost() ? bestChromosome : original;
   }
 }
