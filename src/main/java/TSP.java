@@ -22,7 +22,6 @@ public final class TSP {
    public static boolean DEBUG = false;
    public static Scanner scanner = new Scanner(System.in);
    public static Random randomGenerator = new Random();
-   public static double mutationRate = 0;
 
     /**
      * How many cities to use.
@@ -94,24 +93,6 @@ public final class TSP {
      */
     private static void writeLog(String content) {
        String filename = "results_crossover.out";
-       FileWriter out;
-
-       try {
-          out = new FileWriter(filename, true);
-          out.write(content + "\n");
-          out.close();
-       }
-       catch (IOException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-       }
-    }
-
-    /*
-     * Writing to an output file with the costs.
-     */
-    private static void writeAverage(String content, int uid) {
-       String filename = "Average/average_" + Double.toString(mutationRate) + ".out";
        FileWriter out;
 
        try {
@@ -277,10 +258,6 @@ public final class TSP {
              display = true;
           }
 
-          if (args.length > 1 && !args[1].equals("y") && !args[1].equals("--debug")) {
-             mutationRate = Double.valueOf(args[1]);
-          }
-
           try {
              cityCount = 50;
              populationSize = 100;
@@ -318,6 +295,7 @@ public final class TSP {
              for (int y = 1; y <= runs; y++) {
                 genMin = 0;
                 print(display,  "Run " + y + "\n");
+              //  Evolution.mutationRate = 0.7;
 
              // create the initial population of chromosomes
                 chromosomes = new Chromosome[populationSize];
@@ -331,8 +309,8 @@ public final class TSP {
 
                 while (generation < 100) {
 
-                  mutationRate = Math.pow((2 + ((double)(50-2) / (100-1))*generation), -1);
-                  // mutationRate = 0.7;
+                  // mutationRate = Math.pow((2 + ((double)(50-2) / (100-1))*generation), -1);
+                  // // mutationRate = 0.7;
 
                    evolve(generation);
                    if(generation % 5 == 0 )
