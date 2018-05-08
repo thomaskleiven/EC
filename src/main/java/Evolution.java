@@ -129,7 +129,8 @@ class Evolution{
 			int counter = 0;
 
       for (int i = 0; i<population.length; i++){
-				 newPopulation[i] = ((double) TSP.randomGenerator.nextInt(1000) / 1000) > mutationRate ?
+				 boolean shouldMutate = TSP.randomGenerator.nextDouble() > mutationRate;
+				 newPopulation[i] = shouldMutate ?
 				 										Mutate(population[i], cityList) :
 														new Chromosome(population[i].getCities());
 
@@ -144,9 +145,7 @@ class Evolution{
 
 			Arrays.sort(newPopulation, (a,b) ->
 				Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
-
-		  if (generation == 99) mutationRate = 0.7;
-
+				
       return selectNewPopulation(newPopulation);
    }
 }
