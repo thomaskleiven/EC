@@ -22,7 +22,7 @@ class Evolution{
 	 * @return Mutated chromosome.
 	 */
 	public static Chromosome Mutate(Chromosome original, City [] cityList){
- 		  return Utils.RSM(original.getCities());
+ 		  return new Chromosome(Utils.RSM(original.getCities()));
    }
 
 

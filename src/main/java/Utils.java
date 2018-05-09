@@ -1,6 +1,9 @@
 import java.lang.Math;
+import java.util.Arrays;
 
 public class Utils{
+
+  public static double[][] distanceMatrix;
 
   public static double getMean(double[] data){
     double mean = 0.0;
@@ -23,7 +26,7 @@ public class Utils{
     return Math.sqrt(getVariance(data));
   }
 
-  public static Chromosome RSM(int[] cityIndexes){
+  public static int[] RSM(int[] cityIndexes){
     int start = TSP.randomGenerator.nextInt(50);
     int end = TSP.randomGenerator.nextInt(50);
     start = Math.min(start, end);
@@ -39,6 +42,16 @@ public class Utils{
       endCount--;
     }
 
-    return new Chromosome(cityIndexes);
+    return cityIndexes;
+  }
+
+  public static void buildMatrix(City[] cities){
+    distanceMatrix = new double[cities.length][cities.length];
+
+    for (int from = 0; from < cities.length; from++){
+      for (int to = 0; to < cities.length; to++){
+        distanceMatrix[from][to] = cities[from].proximity(cities[to]);
+      }
+    }
   }
 }

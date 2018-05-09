@@ -28,11 +28,14 @@ public class SimulatedAnnealing {
     while (temp > 1){
       int[] newTour = Arrays.copyOfRange(originalCityIndexes, 0, originalCityIndexes.length);
 
-      Chromosome solution = Utils.RSM(newTour);
-      solution.calculateCost(cityList);
+      newTour = Utils.RSM(newTour);
 
+      double neighborDistance = 0;
+      for (int i = 0; i < (newTour.length-1); i++){
+        neighborDistance += Utils.distanceMatrix[newTour[i]][newTour[i+1]];
+      }
+      neighborDistance += Utils.distanceMatrix[newTour[newTour.length-1]][newTour[0]];
       double currentDistance = bestChromosome.getCost();
-      double neighborDistance = solution.getCost();
 
       double rand = randomDouble();
       if(acceptanceProbability(currentDistance, neighborDistance, temp) > rand){

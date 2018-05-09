@@ -234,7 +234,7 @@ public final class TSP {
         */
        ClassLoader loader = ClassLoader.getSystemClassLoader();
        loader.setDefaultAssertionStatus(true);
-       // randomGenerator.setSeed(0);
+       randomGenerator.setSeed(0);
 
        DateFormat df = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
        Date today = Calendar.getInstance().getTime();
@@ -294,7 +294,6 @@ public final class TSP {
              for (int y = 1; y <= runs; y++) {
                 genMin = 0;
                 print(display,  "Run " + y + "\n");
-              //  Evolution.mutationRate = 0.7;
 
              // create the initial population of chromosomes
                 chromosomes = new Chromosome[populationSize];
@@ -305,15 +304,19 @@ public final class TSP {
 
                 generation = 0;
                 double thisCost = 0.0;
+                Utils.buildMatrix(cities);
 
+                double startTime = System.currentTimeMillis();
                 while (generation < 100) {
 
                   // mutationRate = Math.pow((2 + ((double)(50-2) / (100-1))*generation), -1);
                   // // mutationRate = 0.7;
 
                    evolve(generation);
-                   if(generation % 5 == 0 )
-                      cities = MoveCities(originalCities); //Move from original cities, so they only move by a maximum of one unit.
+                   if(generation % 5 == 0 ){
+                     cities = MoveCities(originalCities); //Move from original cities, so they only move by a maximum of one unit.
+                     Utils.buildMatrix(cities);
+                   }
                    generation++;
 
                    Chromosome.sortChromosomes(chromosomes, populationSize);
@@ -337,7 +340,10 @@ public final class TSP {
                    if(display) {
                       updateGUI();
                    }
+                   System.out.printf("Computational time: %s seconds\n", (double) (System.currentTimeMillis() - startTime) / 1000.0);
+                   System.exit(-1);
                 }
+
 
                 writeLog(genMin + "");
 
