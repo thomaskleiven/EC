@@ -2,7 +2,6 @@
 *.py
 *.class
 /build
-build.gradle
 gradle-user-home/
 gradle/
 
