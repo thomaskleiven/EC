@@ -3,5 +3,5 @@
 *.class
 /build
 gradle-user-home/
-gradle/
+./gradle/
 
