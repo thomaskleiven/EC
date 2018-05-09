@@ -306,11 +306,10 @@ public final class TSP {
                 double thisCost = 0.0;
                 Utils.buildMatrix(cities);
 
-                // double startTime = System.currentTimeMillis();
+                double startTime = System.currentTimeMillis();
                 while (generation < 100) {
 
-                  // mutationRate = Math.pow((2 + ((double)(50-2) / (100-1))*generation), -1);
-                  // // mutationRate = 0.7;
+                   Evolution.mutationRate = Math.pow((2 + ((double)(50-2) / (100-1))*generation), -1);
 
                    evolve(generation);
                    if(generation % 5 == 0 ){

@@ -103,7 +103,7 @@ class Evolution{
       Chromosome [] newPopulation = new Chromosome [population.length];
 
       for (int i = 0; i<population.length; i++){
-				 boolean shouldMutate = TSP.randomGenerator.nextDouble() > mutationRate;
+				 boolean shouldMutate = TSP.randomGenerator.nextDouble() < mutationRate;
 				 newPopulation[i] = shouldMutate ?
 				 										Mutate(population[i], cityList) :
 														new Chromosome(population[i].getCities());

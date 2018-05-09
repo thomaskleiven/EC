@@ -18,7 +18,7 @@ public class SimulatedAnnealing {
 
   public static Chromosome localSearch(Chromosome original, City [] cityList){
     double temp = 100000;
-    double coolingRate = 0.00005;
+    double coolingRate = 0.00001;
     int[] originalCityIndexes = original.getCities();
 
     Chromosome bestChromosome = new Chromosome(original.getCities());
