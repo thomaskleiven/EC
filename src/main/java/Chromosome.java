@@ -90,6 +90,10 @@ final class Chromosome {
         return cost;
     }
 
+    void setCost(double cost){
+      this.cost = cost;
+    }
+
     /**
      * @param i The city you want.
      * @return The ith city.

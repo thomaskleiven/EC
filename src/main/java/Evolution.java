@@ -22,7 +22,7 @@ class Evolution{
 	 * @return Mutated chromosome.
 	 */
 	public static Chromosome Mutate(Chromosome original, City [] cityList){
- 		  return Utils.RSM(original.getCities());
+ 		  return new Chromosome(Utils.RSM(original.getCities()));
    }
 
 
@@ -88,7 +88,7 @@ class Evolution{
  		}
 
 		Chromosome child = new Chromosome(cityIndexesParent1);
-		child.calculateCost(cityList);
+		child.setCost(Utils.getDistanceOfTour(cityIndexesParent1));
 
 		return child;
 	 }
@@ -103,7 +103,7 @@ class Evolution{
       Chromosome [] newPopulation = new Chromosome [population.length];
 
       for (int i = 0; i<population.length; i++){
-				 boolean shouldMutate = TSP.randomGenerator.nextDouble() > mutationRate;
+				 boolean shouldMutate = TSP.randomGenerator.nextDouble() < mutationRate;
 				 newPopulation[i] = shouldMutate ?
 				 										Mutate(population[i], cityList) :
 														new Chromosome(population[i].getCities());
