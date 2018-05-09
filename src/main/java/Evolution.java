@@ -13,7 +13,7 @@ import java.util.Comparator;
 
 class Evolution{
 
-	private static double mutationRate = 0.85;
+	public static double mutationRate = 0.7;
 
 	/**
 	 * The method used to generate a mutant of a chromosome
@@ -22,37 +22,7 @@ class Evolution{
 	 * @return Mutated chromosome.
 	 */
 	public static Chromosome Mutate(Chromosome original, City [] cityList){
-      int [] cityIndexes = original.getCities();
-      City [] newCities = new City[cityIndexes.length];
-
-			if(TSP.DEBUG){
-				System.out.printf("Original chromosome: %s\n", Arrays.toString(cityIndexes));
-				System.out.printf("Cost original chromosome: %s\n", original.getCost());
-			}
-
-			int start = TSP.randomGenerator.nextInt(50);
-			int end = TSP.randomGenerator.nextInt(50);
-
-			int temp = cityIndexes[start];
-
-			cityIndexes[start] = cityIndexes[end];
-			cityIndexes[end] = temp;
-
-      for (int i = 0; i<cityIndexes.length; ++i){
-         newCities[i] = cityList[cityIndexes[i]];
-      }
-
-			original.setCities(cityIndexes);
-			original.calculateCost(newCities);
-
-			if(TSP.DEBUG) {
-				System.out.printf("Swapped indexes: %s, %s\n", start, end);
-				System.out.printf("Mutated chromosome: %s\n", Arrays.toString(original.getCities()));
-				System.out.printf("Cost mutated chromosome: %s\n", original.getCost());
-				System.out.printf("Number of unique elements in mutated chromosome: %s\n", Arrays.stream(original.getCities()).distinct().count());
-			}
-
-      return original;
+ 		  return Utils.RSM(original.getCities());
    }
 
 
@@ -61,10 +31,7 @@ class Evolution{
 		 List<Pair<Integer, Double>> probabilities = new ArrayList<Pair<Integer, Double>>();
 
 		 for (int i = 0; i < chromosomes.length; i++) {
-			 double probability = 1.01 - Math.pow(chromosomes[i].getCost() / max.getCost(), 2);
-			 if (i < 15){
-				 probability = probability + 5;
-			 }
+			 double probability = Math.pow(0.95, i);
 			 probabilities.add(new Pair<Integer,Double>(i, probability));
 		 }
 
@@ -79,114 +46,75 @@ class Evolution{
 			 newChromosomes[i] = chromosomes[(int) samples[i]];
 		 }
 
-		 if (TSP.DEBUG){
-			 System.out.printf("Probability distribution: %s\n\n", probabilityDistribution.getPmf());
-			 double[] distance_old_population = IntStream.range(0,100).mapToDouble(i->chromosomes[i].getCost()).toArray();
-			 double[] distance = IntStream.range(0,100).mapToDouble(i->newChromosomes[i].getCost()).toArray();
-			 System.out.printf("Distance old selected population: %s\n\n", Arrays.toString(distance_old_population));
-			 System.out.printf("Average distance old population: %s\n\n", Arrays.stream(distance_old_population).average());
-			 System.out.printf("Distance selected population: %s\n\n", Arrays.toString(distance));
-			 System.out.printf("Average distance new population: %s\n\n", Arrays.stream(distance).average());
-		 }
-
 		 return newChromosomes;
    }
 
 
 
-	/**
-	 * Breed two chromosomes to create a offspring
-	 * @param parent1 First parent.
-	 * @param parent2 Second parent.
-	 * @param cityList list of cities, needed to instantiate the new Chromosome.
-	 * @return Chromosome resuling from breeding parent.
-	 */
-	public static Chromosome Breed(Chromosome parent1, Chromosome parent2, City [] cityList){
-		List<Integer> tour1 = Arrays.stream(parent1.getCities()).boxed().collect(Collectors.toList());
-		List<Integer> tour2 = Arrays.stream(parent2.getCities()).boxed().collect(Collectors.toList());
+	 /**
+ 	 * Breed two chromosomes to create a offspring
+ 	 * @param parent1 First parent.
+ 	 * @param parent2 Second parent.
+ 	 * @param cityList list of cities, needed to instantiate the new Chromosome.
+ 	 * @return Chromosome resuling from breeding parent.
+ 	 */
+ 	public static Chromosome Breed(Chromosome parent1, Chromosome parent2, City [] cityList){
+ 		int [] cityIndexesParent1 = parent1.getCities();
+ 		int [] cityIndexesParent2 = parent2.getCities();
 
-		if (TSP.DEBUG){
-			System.out.printf("Parent1: %s \n", Arrays.toString(parent1.getCities()));
+ 		// In orrder to find index
+ 		List<Integer> parent1Array = Arrays.stream(cityIndexesParent1).boxed().collect(Collectors.toList());
 
-			System.out.printf("Parent2: %s \n", Arrays.toString(parent2.getCities()));
+ 		int index = TSP.randomGenerator.nextInt(cityIndexesParent1.length);
+ 		int start_value = cityIndexesParent1[index];
+ 		int end_value = 0;
+ 		ArrayList<Integer> swapPositions = new ArrayList<Integer>();
+
+ 		while(true) {
+ 			if( start_value == end_value ){
+ 				break;
+ 			}
+ 			end_value = cityIndexesParent2[index];
+
+ 			index = parent1Array.indexOf(end_value);
+ 			swapPositions.add(index);
+ 		}
+
+ 		int[] temp = parent1.getCities();
+
+ 		for( Integer position : swapPositions ){
+ 			cityIndexesParent1[position] = cityIndexesParent2[position];
+ 			cityIndexesParent2[position] = temp[position];
+ 		}
+
+		Chromosome child = new Chromosome(parent1.getCities());
+
+		child.setCities(cityIndexesParent1);
+		child.calculateCost(cityList);
+		return child;
+	 }
+
+	public static void increaseOrDecreaseMutationRate(double[] formerIndividuals, double newCost){
+		int numberOfBetterIndividuals = 0;
+		for(int i = 0; i < formerIndividuals.length; i++){
+			if (formerIndividuals[i] < newCost) numberOfBetterIndividuals++;
 		}
 
-		      final int size = tour1.size();
-
-		      // choose two random numbers for the start and end indices of the slice
-		      // (one can be at index "size")
-		      final int number1 = TSP.randomGenerator.nextInt(size - 1);
-		      final int number2 = TSP.randomGenerator.nextInt(size);
-
-		      // make the smaller the start and the larger the end
-		     	final int start = Math.min(number1, number2);
-		      final int end = Math.max(number1, number2);
-
-		      // instantiate two child tours
-		      final List<Integer> child1 = new Vector<Integer>();
-		      final List<Integer> child2 = new Vector<Integer>();
-
-		      // add the sublist in between the start and end points to the children
-		      child1.addAll(tour1.subList(start, end));
-		      child2.addAll(tour2.subList(start, end));
-
-		      // iterate over each city in the parent tours
-		      int currentCityIndex = 0;
-		      int currentCityInTour1 = 0;
-		      int currentCityInTour2 = 0;
-		      for (int i = 0; i < size; i++ ) {
-
-		        // get the index of the current city
-		        currentCityIndex = (end + i) % size;
-
-		        // get the city at the current index in each of the two parent tours
-		        currentCityInTour1 = tour1.get(currentCityIndex);
-		        currentCityInTour2 = tour2.get(currentCityIndex);
-
-		        // if child 1 does not already contain the current city in tour 2, add it
-		        if (!child1.contains(currentCityInTour2)) {
-		          child1.add(currentCityInTour2);
-		        }
-
-		        // if child 2 does not already contain the current city in tour 1, add it
-		        if (!child2.contains(currentCityInTour1)) {
-		          child2.add(currentCityInTour1);
-		       }
-		     }
-
-		     // rotate the lists so the original slice is in the same place as in the
-		     // parent tours
-		     Collections.rotate(child1, start);
-		     Collections.rotate(child2, start);
-
-				 City [] newCities = new City[child1.size()];
-				 for (int i = 0; i<child1.size(); ++i){
-					 newCities[i] = cityList[child1.get(i)];
-				 }
-
-				 // parent1.setCities(child1.stream().mapToInt(i->i).toArray());
-				 // parent1.calculateCost(newCities);
-
-				 if (TSP.DEBUG) {
-					 System.out.printf("Start index: %s \n", start);
-					 System.out.printf("End index: %s \n", end);
-
-					 System.out.println("---------------");
+		mutationRate = 	((double) numberOfBetterIndividuals / formerIndividuals.length > 0.25) ?
+										(mutationRate *= 0.85) : (mutationRate /= 0.85);
 
 
-					 System.out.printf("Child1 cities: %s \n", Arrays.toString(child1.toArray()));
-					 System.out.printf("Child cities: %s \n", Arrays.toString(parent1.getCities()));
-					 System.out.printf("Number of unique elements in Child: %s\n", Arrays.stream(parent1.getCities()).distinct().count());
-					 System.out.printf("Number of unique elements in Parent1: %s\n", Arrays.stream(parent1.getCities()).distinct().count());
-					 System.out.printf("Number of unique elements in Parent2: %s\n", Arrays.stream(parent2.getCities()).distinct().count());
-			 	 }
+		System.out.println("Number of better individuals: " + numberOfBetterIndividuals);
+		System.out.printf("Former individuals: %s\n", Arrays.toString(formerIndividuals));
+		System.out.printf("New cost: %s\n", newCost);
+		System.out.printf("Mutation rate: %s\n", mutationRate);
+		System.out.printf("Success rate: %s\n", (double) numberOfBetterIndividuals / formerIndividuals.length);
 
-				 Chromosome a = new Chromosome(newCities);
-				 a.setCities(child1.stream().mapToInt(i->i).toArray());
-				 a.calculateCost(newCities);
 
-				 return a;
-	 }
+
+		TSP.scanner.nextLine();
+	}
+
 
 	/**
 	 * Evolve given population to produce the next generation.
@@ -194,42 +122,30 @@ class Evolution{
 	 * @param cityList List of ciies, needed for the Chromosome constructor calls you will be doing when mutating and breeding Chromosome instances
 	 * @return The new generation of individuals.
 	 */
-   public static Chromosome [] Evolve(Chromosome [] population, City [] cityList){
+   public static Chromosome [] Evolve(Chromosome [] population, City [] cityList, int generation){
       Chromosome [] newPopulation = new Chromosome [population.length];
+
+			double[] formerIndividuals = new double[20];
+			int counter = 0;
+
       for (int i = 0; i<population.length; i++){
-				 if (TSP.DEBUG) {
-				 	System.out.printf("Individual number: %s\n", i);
-			 	 }
-				 newPopulation[i] = ((double) TSP.randomGenerator.nextInt(100) / 100) > mutationRate ? Mutate(population[i], cityList) : population[i];
-				 int partner = TSP.randomGenerator.nextInt(population.length);
-				 if (TSP.DEBUG) {
-					 System.out.printf("Parent1: %s\n", i);
-					 System.out.printf("Parent2: %s\n", partner);
-				 }
+				 boolean shouldMutate = TSP.randomGenerator.nextDouble() > mutationRate;
+				 newPopulation[i] = shouldMutate ?
+				 										Mutate(population[i], cityList) :
+														new Chromosome(population[i].getCities());
 
-				 Chromosome child = Breed(population[i], population[partner], cityList);
+				 int partner = TSP.randomGenerator.nextInt(100);
+				 Chromosome child = Breed(newPopulation[i], population[partner], cityList);
+				 newPopulation[i] = SimulatedAnnealing.localSearch(child, cityList);
 
-
-				 if (TSP.DEBUG){
-					 System.out.printf("Current Individual: %s\n", Arrays.toString(newPopulation[i].getCities()));
-					 System.out.printf("Current Individual after breed: %s\n", Arrays.toString(child.getCities()));
-					 TSP.scanner.nextLine();
-				 }
-
-				 newPopulation[i] = child;
-			}
-
-			if (TSP.DEBUG){
-				System.out.printf("New population: %s \n\n", Arrays.toString(IntStream.range(0,100).mapToDouble(i->newPopulation[i].getCost()).toArray()));
+				 formerIndividuals[counter++] = child.getCost();
+				 if (i % 19 == 0 && i != 0) counter = 0;
+				 // if(i > 19) increaseOrDecreaseMutationRate(formerIndividuals, child.getCost());
 			}
 
 			Arrays.sort(newPopulation, (a,b) ->
 				Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
-
-			if (TSP.DEBUG){
-				System.out.printf("Sorted new population: %s \n\n", Arrays.toString(IntStream.range(0,100).mapToDouble(i->newPopulation[i].getCost()).toArray()));
-			}
-
+				
       return selectNewPopulation(newPopulation);
    }
 }

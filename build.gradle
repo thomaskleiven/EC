@@ -1,5 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'application'
+apply plugin: 'eu.appsatori.fatjar'
 
 mainClassName = 'TSP'
 
@@ -21,11 +22,20 @@ run {
 
 buildscript {
   repositories {
-    mavenCentral()
+      jcenter()
   }
+
   dependencies {
-    classpath 'org.apache.commons:commons-math3:3.6.1'
+      classpath "eu.appsatori:gradle-fatjar-plugin:0.3"
   }
+}
+
+fatJar {
+  classifier 'fat'
+  manifest {
+    attributes 'Main-Class': 'TSP'
+  }
+  exclude 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.SF'
 }
 
 dependencies {
