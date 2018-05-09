@@ -1,8 +1,8 @@
 *.out
 *.py
-<<<<<<< HEAD
-.gradle 
-=======
-.gradle
 *.class
->>>>>>> crossover
+/build
+build.gradle
+gradle-user-home/
+gradle/
+
