@@ -18,28 +18,25 @@ public class SimulatedAnnealing {
 
   public static Chromosome localSearch(Chromosome original, City [] cityList){
     double temp = 100000;
-    double coolingRate = 0.00005;
+    double coolingRate = 0.0005;
     int[] originalCityIndexes = original.getCities();
-    int[] bestTour = new int[originalCityIndexes.length];
 
     Chromosome bestChromosome = new Chromosome(original.getCities());
-    bestChromosome.calculateCost(cityList);
+    bestChromosome.setCost(Utils.getDistanceOfTour(originalCityIndexes));
 
     while (temp > 1){
       int[] newTour = Arrays.copyOfRange(originalCityIndexes, 0, originalCityIndexes.length);
-
-      Chromosome solution = Utils.RSM(newTour);
-      solution.calculateCost(cityList);
+      newTour = Utils.RSM(newTour);
 
       double currentDistance = bestChromosome.getCost();
-      double neighborDistance = solution.getCost();
+      double neighborDistance = Utils.getDistanceOfTour(newTour);
 
       double rand = randomDouble();
       if(acceptanceProbability(currentDistance, neighborDistance, temp) > rand){
         originalCityIndexes = Arrays.copyOfRange(newTour, 0, newTour.length);
 
         bestChromosome.setCities(newTour);
-        bestChromosome.calculateCost(cityList);
+        bestChromosome.setCost(Utils.getDistanceOfTour(newTour));
       }
 
       temp *= 1 - coolingRate;
