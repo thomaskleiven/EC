@@ -306,7 +306,6 @@ public final class TSP {
                 generation = 0;
                 double thisCost = 0.0;
 
-                double startTime = System.currentTimeMillis();
                 while (generation < 100) {
 
                   // mutationRate = Math.pow((2 + ((double)(50-2) / (100-1))*generation), -1);
@@ -338,8 +337,6 @@ public final class TSP {
                    if(display) {
                       updateGUI();
                    }
-                   System.out.printf("Computational time: %s seconds\n", (double) (System.currentTimeMillis() - startTime) / 1000.0);
-                   System.exit(-1);
                 }
 
                 writeLog(genMin + "");
