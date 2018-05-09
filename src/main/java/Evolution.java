@@ -13,7 +13,7 @@ import java.util.Comparator;
 
 class Evolution{
 
-	public static double mutationRate = 0.85;
+	public static double mutationRate = 0.72;
 
 	/**
 	 * The method used to generate a mutant of a chromosome

@@ -308,9 +308,6 @@ public final class TSP {
 
                 double startTime = System.currentTimeMillis();
                 while (generation < 100) {
-
-                   Evolution.mutationRate = Math.pow((2 + ((double)(50-2) / (100-1))*generation), -1);
-
                    evolve(generation);
                    if(generation % 5 == 0 ){
                      cities = MoveCities(originalCities); //Move from original cities, so they only move by a maximum of one unit.
