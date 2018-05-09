@@ -27,7 +27,6 @@ class Evolution{
 
 
 	 private static Chromosome[] selectNewPopulation(final Chromosome[] chromosomes){
-		 Chromosome max = Arrays.stream(chromosomes).max(Comparator.comparingDouble(Chromosome::getCost)).get();
 		 List<Pair<Integer, Double>> probabilities = new ArrayList<Pair<Integer, Double>>();
 
 		 for (int i = 0; i < chromosomes.length; i++) {
