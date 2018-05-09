@@ -13,7 +13,7 @@ import java.util.Comparator;
 
 class Evolution{
 
-	public static double mutationRate = 0.7;
+	public static double mutationRate = 0.85;
 
 	/**
 	 * The method used to generate a mutant of a chromosome
@@ -87,34 +87,11 @@ class Evolution{
  			cityIndexesParent2[position] = temp[position];
  		}
 
-		Chromosome child = new Chromosome(parent1.getCities());
-
-		child.setCities(cityIndexesParent1);
+		Chromosome child = new Chromosome(cityIndexesParent1);
 		child.calculateCost(cityList);
+
 		return child;
 	 }
-
-	public static void increaseOrDecreaseMutationRate(double[] formerIndividuals, double newCost){
-		int numberOfBetterIndividuals = 0;
-		for(int i = 0; i < formerIndividuals.length; i++){
-			if (formerIndividuals[i] < newCost) numberOfBetterIndividuals++;
-		}
-
-		mutationRate = 	((double) numberOfBetterIndividuals / formerIndividuals.length > 0.25) ?
-										(mutationRate *= 0.85) : (mutationRate /= 0.85);
-
-
-		System.out.println("Number of better individuals: " + numberOfBetterIndividuals);
-		System.out.printf("Former individuals: %s\n", Arrays.toString(formerIndividuals));
-		System.out.printf("New cost: %s\n", newCost);
-		System.out.printf("Mutation rate: %s\n", mutationRate);
-		System.out.printf("Success rate: %s\n", (double) numberOfBetterIndividuals / formerIndividuals.length);
-
-
-
-		TSP.scanner.nextLine();
-	}
-
 
 	/**
 	 * Evolve given population to produce the next generation.
@@ -125,9 +102,6 @@ class Evolution{
    public static Chromosome [] Evolve(Chromosome [] population, City [] cityList, int generation){
       Chromosome [] newPopulation = new Chromosome [population.length];
 
-			double[] formerIndividuals = new double[20];
-			int counter = 0;
-
       for (int i = 0; i<population.length; i++){
 				 boolean shouldMutate = TSP.randomGenerator.nextDouble() > mutationRate;
 				 newPopulation[i] = shouldMutate ?
@@ -137,15 +111,11 @@ class Evolution{
 				 int partner = TSP.randomGenerator.nextInt(100);
 				 Chromosome child = Breed(newPopulation[i], population[partner], cityList);
 				 newPopulation[i] = SimulatedAnnealing.localSearch(child, cityList);
-
-				 formerIndividuals[counter++] = child.getCost();
-				 if (i % 19 == 0 && i != 0) counter = 0;
-				 // if(i > 19) increaseOrDecreaseMutationRate(formerIndividuals, child.getCost());
 			}
 
 			Arrays.sort(newPopulation, (a,b) ->
 				Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
-				
+
       return selectNewPopulation(newPopulation);
    }
 }
