@@ -26,6 +26,16 @@ public class Utils{
     return Math.sqrt(getVariance(data));
   }
 
+  public static double getDistanceOfTour(int[] tour){
+    double neighborDistance = 0;
+    for (int i = 0; i < (tour.length-1); i++){
+      neighborDistance += distanceMatrix[tour[i]][tour[i+1]];
+    }
+    neighborDistance += distanceMatrix[tour[tour.length-1]][tour[0]];
+
+    return neighborDistance;
+  }
+
   public static int[] RSM(int[] cityIndexes){
     int start = TSP.randomGenerator.nextInt(50);
     int end = TSP.randomGenerator.nextInt(50);

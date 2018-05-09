@@ -88,7 +88,7 @@ class Evolution{
  		}
 
 		Chromosome child = new Chromosome(cityIndexesParent1);
-		child.calculateCost(cityList);
+		child.setCost(Utils.getDistanceOfTour(cityIndexesParent1));
 
 		return child;
 	 }

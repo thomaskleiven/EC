@@ -20,29 +20,23 @@ public class SimulatedAnnealing {
     double temp = 100000;
     double coolingRate = 0.00005;
     int[] originalCityIndexes = original.getCities();
-    int[] bestTour = new int[originalCityIndexes.length];
 
     Chromosome bestChromosome = new Chromosome(original.getCities());
-    bestChromosome.calculateCost(cityList);
+    bestChromosome.setCost(Utils.getDistanceOfTour(originalCityIndexes));
 
     while (temp > 1){
       int[] newTour = Arrays.copyOfRange(originalCityIndexes, 0, originalCityIndexes.length);
-
       newTour = Utils.RSM(newTour);
 
-      double neighborDistance = 0;
-      for (int i = 0; i < (newTour.length-1); i++){
-        neighborDistance += Utils.distanceMatrix[newTour[i]][newTour[i+1]];
-      }
-      neighborDistance += Utils.distanceMatrix[newTour[newTour.length-1]][newTour[0]];
       double currentDistance = bestChromosome.getCost();
+      double neighborDistance = Utils.getDistanceOfTour(newTour);
 
       double rand = randomDouble();
       if(acceptanceProbability(currentDistance, neighborDistance, temp) > rand){
         originalCityIndexes = Arrays.copyOfRange(newTour, 0, newTour.length);
 
         bestChromosome.setCities(newTour);
-        bestChromosome.calculateCost(cityList);
+        bestChromosome.setCost(Utils.getDistanceOfTour(newTour));
       }
 
       temp *= 1 - coolingRate;
