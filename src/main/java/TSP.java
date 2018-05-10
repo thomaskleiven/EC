@@ -20,6 +20,8 @@ public final class TSP {
    private static final int cityShiftAmount = 60; //DO NOT CHANGE THIS.
 
    public static boolean DEBUG = false;
+   public static boolean TOURNAMENT = false;
+   public static boolean ELITIST = false;
    public static Scanner scanner = new Scanner(System.in);
    public static Random randomGenerator = new Random();
 
@@ -252,10 +254,10 @@ public final class TSP {
        else {
 
          if (args.length > 1 && args[1].equals("--debug")) DEBUG=true;
-
-          if (args.length > 1 && args[1].equals("y")) {
-             display = true;
-          }
+         if (args.length > 1 && args[1].equals("--tournament")) TOURNAMENT=true;
+         if (args.length > 1 && args[1].equals("y")) display = true;
+         if (args.length > 1 && args[1].equals("--elite")) ELITIST = true;
+         if (args.length > 2 && args[2].equals("--elite")) ELITIST = true;
 
           try {
              cityCount = 50;
@@ -291,6 +293,7 @@ public final class TSP {
              originalCities = cities = LoadCitiesFromFile(currentWorkingDirectory+"/"+"CityList.txt", cities);
 
              writeLog("Run Stats for experiment at: " + currentTime);
+             double startTime = System.currentTimeMillis();
              for (int y = 1; y <= runs; y++) {
                 genMin = 0;
                 print(display,  "Run " + y + "\n");
@@ -300,13 +303,13 @@ public final class TSP {
                 for (int x = 0; x < populationSize; x++) {
                    chromosomes[x] = new Chromosome(cities);
                    chromosomes[x].shuffleChromosome(cities);
+                   chromosomes[x].calculateCost(cities);
                 }
 
                 generation = 0;
                 double thisCost = 0.0;
                 Utils.buildMatrix(cities);
 
-                double startTime = System.currentTimeMillis();
                 while (generation < 100) {
                    evolve(generation);
                    if(generation % 5 == 0 ){
@@ -336,8 +339,6 @@ public final class TSP {
                    if(display) {
                       updateGUI();
                    }
-                   // System.out.printf("Computational time: %s seconds\n", (double) (System.currentTimeMillis() - startTime) / 1000.0);
-                   // System.exit(-1);
                 }
 
 
@@ -356,6 +357,7 @@ public final class TSP {
                 // print(display, "");
              }
 
+
              avg = sum / runs;
              // writeAverage(String.valueOf(avg), uid);
              print(display, "Statistics after " + runs + " runs");
@@ -363,7 +365,8 @@ public final class TSP {
              print(display, "Statistics of minimum cost from each run \n");
              print(display, "Lowest: " + min + "\nAverage: " + avg + "\nHighest: " + max + "\n");
 
-             System.out.println("Num times path was calculated: "+Chromosome.getNumberOfPathLengthCalculations());
+             System.out.printf("Computational time: %s seconds\n", (double) (System.currentTimeMillis() - startTime) / 1000.0);
+             System.exit(-1);
 
           }
           catch (NumberFormatException e) {

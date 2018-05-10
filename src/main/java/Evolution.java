@@ -14,6 +14,7 @@ import java.util.Comparator;
 class Evolution{
 
 	public static double mutationRate = 0.72;
+	private static int NUM_ELITE = 2;
 
 	/**
 	 * The method used to generate a mutant of a chromosome
@@ -26,7 +27,7 @@ class Evolution{
    }
 
 
-	 private static Chromosome[] selectNewPopulation(final Chromosome[] chromosomes){
+	 private static Chromosome[] rankedBasedSelection(final Chromosome[] chromosomes){
 		 List<Pair<Integer, Double>> probabilities = new ArrayList<Pair<Integer, Double>>();
 
 		 for (int i = 0; i < chromosomes.length; i++) {
@@ -40,13 +41,58 @@ class Evolution{
 		 probabilityDistribution.reseedRandomGenerator(0);
 		 Object[] samples = probabilityDistribution.sample(100);
 
-		 Chromosome[] newChromosomes = new Chromosome[samples.length];
+		 Chromosome[] newPopulation = new Chromosome[samples.length];
 		 for (int i = 0; i < samples.length; i++){
-			 newChromosomes[i] = chromosomes[(int) samples[i]];
+			 newPopulation[i] = chromosomes[(int) samples[i]];
 		 }
 
-		 return newChromosomes;
+		 return TSP.ELITIST ? eliteSelection(newPopulation) : newPopulation;
    }
+
+	 private static Chromosome[] getChampions(Chromosome[] contestors, int numChampions){
+			Arrays.sort(contestors, (a,b) ->
+			Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
+
+			return Arrays.copyOfRange(contestors, 0, numChampions+1);
+	 }
+
+	 private static Chromosome[] getCompetitors(Chromosome[] population, int[] contestors){
+		 Chromosome[] competitors = new Chromosome[contestors.length];
+		 for (int i = 0; i < contestors.length; i++){
+			 competitors[i] = population[contestors[i]];
+		 }
+
+		 return competitors;
+	 }
+
+	 public static Chromosome[] tournamentSelection(Chromosome[] population, int tournamentSize, int numChampions){
+		 double[] old_distance = IntStream.range(0,100).mapToDouble(i->population[i].getCost()).toArray();
+		 Chromosome[] newPopulation = new Chromosome[population.length];
+
+		 for(int i = 0; i < population.length; i+=numChampions){
+			 final int[] contestors = TSP.randomGenerator.ints(0, 50).distinct().limit(tournamentSize).toArray();
+			 final Chromosome[] competitors = getCompetitors(population, contestors);
+			 final Chromosome[] champions = getChampions(competitors, 1);
+
+			 for(int champ = 0; champ < champions.length; champ++){
+				 newPopulation[numChampions == 1 ? i : i+champ] = champions[champ];
+			 }
+		 }
+
+		 return TSP.ELITIST ? eliteSelection(newPopulation) : newPopulation;
+	 }
+
+	 public static Chromosome[] eliteSelection(Chromosome[] population){
+		 Arrays.sort(population, (a,b) ->
+		 Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
+
+		 for (int i = 0; i < NUM_ELITE; i++){
+			 population[population.length-(i+1)] = new Chromosome(population[i].getCities());
+			 population[population.length-(i+1)].setCost(population[i].getCost());
+		 }
+
+		 return population;
+	 }
 
 
 
@@ -89,6 +135,10 @@ class Evolution{
 		Chromosome child = new Chromosome(cityIndexesParent1);
 		child.setCost(Utils.getDistanceOfTour(cityIndexesParent1));
 
+		if(Arrays.stream(parent2.getCities()).distinct().count() != 50){
+			throw new IllegalStateException("Child has not 50 distinct cities");
+		}
+
 		return child;
 	 }
 
@@ -115,6 +165,6 @@ class Evolution{
 			Arrays.sort(newPopulation, (a,b) ->
 				Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
 
-      return selectNewPopulation(newPopulation);
+      return TSP.TOURNAMENT ? tournamentSelection(newPopulation, 5, 2) : rankedBasedSelection(newPopulation);
    }
 }
