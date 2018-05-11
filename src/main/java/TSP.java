@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.awt.*;
 import java.util.Scanner;
+import java.util.stream.IntStream;
 
 import javax.swing.*;
 
@@ -294,13 +295,13 @@ public final class TSP {
 
              writeLog("Run Stats for experiment at: " + currentTime);
              double startTime = System.currentTimeMillis();
-             for (int y = 1; y <= runs; y++) {
-              Main main = new Main(Arrays.copyOfRange(cities, 0, cities.length), originalCities, populationSize, runs);
-              if (main.getGenMin() > max) max = main.getGenMin();
-              if (main.getGenMin() < min || min == 0) min = main.getGenMin();
-              sum +=  main.getGenMin();
-              writeLog(genMin + "");
-             }
+             IntStream.range(0, runs).parallel().forEach(i -> {
+               Main main = new Main(Arrays.copyOfRange(cities, 0, cities.length), originalCities, populationSize, runs);
+               
+               if (main.getGenMin() > max) max = main.getGenMin();
+               if (main.getGenMin() < min || min == 0) min = main.getGenMin();
+               sum +=  main.getGenMin();
+             });
 
 
              avg = sum / runs;
