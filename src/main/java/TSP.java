@@ -297,7 +297,7 @@ public final class TSP {
              double startTime = System.currentTimeMillis();
              IntStream.range(0, runs).parallel().forEach(i -> {
                Main main = new Main(Arrays.copyOfRange(cities, 0, cities.length), originalCities, populationSize, runs);
-               
+
                if (main.getGenMin() > max) max = main.getGenMin();
                if (main.getGenMin() < min || min == 0) min = main.getGenMin();
                sum +=  main.getGenMin();
@@ -312,8 +312,6 @@ public final class TSP {
              print(display, "Lowest: " + min + "\nAverage: " + avg + "\nHighest: " + max + "\n");
 
              System.out.printf("Computational time: %s seconds\n", (double) (System.currentTimeMillis() - startTime) / 1000.0);
-             System.exit(-1);
-
           }
           catch (NumberFormatException e) {
              System.out.println("Please ensure you enter integers for cities and population size");
