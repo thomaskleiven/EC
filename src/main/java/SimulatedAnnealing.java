@@ -22,25 +22,25 @@ public class SimulatedAnnealing {
     int[] originalCityIndexes = original.getCities();
 
     Chromosome bestChromosome = new Chromosome(original.getCities());
-    bestChromosome.setCost(Utils.getDistanceOfTour(originalCityIndexes));
-
-    while (temp > 1){
-      int[] newTour = Arrays.copyOfRange(originalCityIndexes, 0, originalCityIndexes.length);
-      newTour = Utils.RSM(newTour);
-
-      double currentDistance = bestChromosome.getCost();
-      double neighborDistance = Utils.getDistanceOfTour(newTour);
-
-      double rand = randomDouble();
-      if(acceptanceProbability(currentDistance, neighborDistance, temp) > rand){
-        originalCityIndexes = Arrays.copyOfRange(newTour, 0, newTour.length);
-
-        bestChromosome.setCities(newTour);
-        bestChromosome.setCost(Utils.getDistanceOfTour(newTour));
-      }
-
-      temp *= 1 - coolingRate;
-    }
+    // bestChromosome.setCost(Utils.getDistanceOfTour(originalCityIndexes));
+    //
+    // while (temp > 1){
+    //   int[] newTour = Arrays.copyOfRange(originalCityIndexes, 0, originalCityIndexes.length);
+    //   newTour = Utils.RSM(newTour);
+    //
+    //   double currentDistance = bestChromosome.getCost();
+    //   double neighborDistance = Utils.getDistanceOfTour(newTour);
+    //
+    //   double rand = randomDouble();
+    //   if(acceptanceProbability(currentDistance, neighborDistance, temp) > rand){
+    //     originalCityIndexes = Arrays.copyOfRange(newTour, 0, newTour.length);
+    //
+    //     bestChromosome.setCities(newTour);
+    //     bestChromosome.setCost(Utils.getDistanceOfTour(newTour));
+    //   }
+    //
+    //   temp *= 1 - coolingRate;
+    // }
 
     return bestChromosome.getCost() < original.getCost() ? bestChromosome : original;
   }

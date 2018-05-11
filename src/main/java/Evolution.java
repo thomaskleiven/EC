@@ -22,12 +22,12 @@ class Evolution{
 	 * @param cityList list of cities, needed to instantiate the new Chromosome.
 	 * @return Mutated chromosome.
 	 */
-	public static Chromosome Mutate(Chromosome original, City [] cityList){
+	private Chromosome Mutate(Chromosome original, City [] cityList){
  		  return new Chromosome(Utils.RSM(original.getCities()));
    }
 
 
-	 private static Chromosome[] rankedBasedSelection(final Chromosome[] chromosomes){
+	 private Chromosome[] rankedBasedSelection(final Chromosome[] chromosomes){
 		 List<Pair<Integer, Double>> probabilities = new ArrayList<Pair<Integer, Double>>();
 
 		 for (int i = 0; i < chromosomes.length; i++) {
@@ -56,7 +56,7 @@ class Evolution{
 			return Arrays.copyOfRange(contestors, 0, numChampions+1);
 	 }
 
-	 private static Chromosome[] getCompetitors(Chromosome[] population, int[] contestors){
+	 private Chromosome[] getCompetitors(Chromosome[] population, int[] contestors){
 		 Chromosome[] competitors = new Chromosome[contestors.length];
 		 for (int i = 0; i < contestors.length; i++){
 			 competitors[i] = population[contestors[i]];
@@ -65,7 +65,7 @@ class Evolution{
 		 return competitors;
 	 }
 
-	 public static Chromosome[] tournamentSelection(Chromosome[] population, int tournamentSize, int numChampions){
+	 private Chromosome[] tournamentSelection(Chromosome[] population, int tournamentSize, int numChampions){
 		 double[] old_distance = IntStream.range(0,100).mapToDouble(i->population[i].getCost()).toArray();
 		 Chromosome[] newPopulation = new Chromosome[population.length];
 
@@ -82,7 +82,7 @@ class Evolution{
 		 return TSP.ELITIST ? eliteSelection(newPopulation) : newPopulation;
 	 }
 
-	 public static Chromosome[] eliteSelection(Chromosome[] population){
+	 private Chromosome[] eliteSelection(Chromosome[] population){
 		 Arrays.sort(population, (a,b) ->
 		 Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
 
@@ -103,7 +103,7 @@ class Evolution{
  	 * @param cityList list of cities, needed to instantiate the new Chromosome.
  	 * @return Chromosome resuling from breeding parent.
  	 */
- 	public static Chromosome Breed(Chromosome parent1, Chromosome parent2, City [] cityList){
+ 	private Chromosome Breed(Chromosome parent1, Chromosome parent2, City [] cityList){
  		int [] cityIndexesParent1 = parent1.getCities();
  		int [] cityIndexesParent2 = parent2.getCities();
 
@@ -133,7 +133,7 @@ class Evolution{
  		}
 
 		Chromosome child = new Chromosome(cityIndexesParent1);
-		child.setCost(Utils.getDistanceOfTour(cityIndexesParent1));
+		child.calculateCost(cityList);
 
 		if(Arrays.stream(parent2.getCities()).distinct().count() != 50){
 			throw new IllegalStateException("Child has not 50 distinct cities");
@@ -148,7 +148,7 @@ class Evolution{
 	 * @param cityList List of ciies, needed for the Chromosome constructor calls you will be doing when mutating and breeding Chromosome instances
 	 * @return The new generation of individuals.
 	 */
-   public static Chromosome [] Evolve(Chromosome [] population, City [] cityList, int generation){
+   public Chromosome [] evolve(Chromosome [] population, City [] cityList, int generation){
       Chromosome [] newPopulation = new Chromosome [population.length];
 
       for (int i = 0; i<population.length; i++){
@@ -159,7 +159,7 @@ class Evolution{
 
 				 int partner = TSP.randomGenerator.nextInt(100);
 				 Chromosome child = Breed(newPopulation[i], population[partner], cityList);
-				 newPopulation[i] = SimulatedAnnealing.localSearch(child, cityList);
+				 newPopulation[i] = child;
 			}
 
 			Arrays.sort(newPopulation, (a,b) ->
