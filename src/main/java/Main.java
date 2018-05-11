@@ -33,34 +33,38 @@ public class Main{
     }
   }
 
+  private void sortChromosomes(){
+    Arrays.sort(this.chromosomes, (a,b) ->
+      Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
+  }
+
+  public double getGenMin(){ return this.genMin; };
+
   private void run(int runs){
+    double startTime = System.currentTimeMillis();
+    int generation = 0;
+    this.genMin = 0;
 
-    for(int i = 1; i <= runs; i++){
-      this.genMin = 0;
-      System.out.printf("Run " + i + "\n");
+    initChromosomes();
+    double bestCostCurrentPopulation = 0;
+    Utils.buildMatrix(this.cities, this.distanceMatrix);
+    Evolution evolution = new Evolution();
 
-      initChromosomes();
-      int generation = 0;
-      double bestCostCurrentPopulation = 0;
-      Utils.buildMatrix(this.cities, this.distanceMatrix);
-      Evolution evolution = new Evolution();
-
-      while (generation < 100){
-        this.chromosomes = evolution.evolve(this.chromosomes, this.cities, generation);
-        if(generation % 5 == 0){
-          this.cities = TSP.MoveCities(this.cities);
-          Utils.buildMatrix(this.cities, this.distanceMatrix);
-        }
-
-        System.out.println(this.distanceMatrix[1][20]);
-
-        if(generation % 6 == 0 && generation !=0) break;
-        generation++;
+    while (generation < 100){
+      this.chromosomes = evolution.evolve(this.chromosomes, this.cities, generation, this.distanceMatrix);
+      if(generation % 5 == 0){
+        this.cities = TSP.MoveCities(this.cities);
+        Utils.buildMatrix(this.cities, this.distanceMatrix);
       }
+      generation++;
 
+      sortChromosomes();
+      bestCostCurrentPopulation = chromosomes[0].getCost();
 
-
-
+      if(bestCostCurrentPopulation < this.genMin || this.genMin == 0){
+        this.genMin = bestCostCurrentPopulation;
+      }
+      System.out.println("Gen: " + generation + " Cost: " + (int) bestCostCurrentPopulation);
     }
   }
 

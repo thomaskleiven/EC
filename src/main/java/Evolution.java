@@ -148,7 +148,7 @@ class Evolution{
 	 * @param cityList List of ciies, needed for the Chromosome constructor calls you will be doing when mutating and breeding Chromosome instances
 	 * @return The new generation of individuals.
 	 */
-   public Chromosome [] evolve(Chromosome [] population, City [] cityList, int generation){
+   public Chromosome [] evolve(Chromosome [] population, City [] cityList, int generation, double[][] distanceMatrix){
       Chromosome [] newPopulation = new Chromosome [population.length];
 
       for (int i = 0; i<population.length; i++){
@@ -159,7 +159,7 @@ class Evolution{
 
 				 int partner = TSP.randomGenerator.nextInt(100);
 				 Chromosome child = Breed(newPopulation[i], population[partner], cityList);
-				 newPopulation[i] = child;
+				 newPopulation[i] = SimulatedAnnealing.localSearch(child, cityList, distanceMatrix);
 			}
 
 			Arrays.sort(newPopulation, (a,b) ->

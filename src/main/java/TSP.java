@@ -93,7 +93,7 @@ public final class TSP {
     /*
      * Writing to an output file with the costs.
      */
-    private static void writeLog(String content) {
+    public static void writeLog(String content) {
        String filename = "results_crossover.out";
        FileWriter out;
 
@@ -295,67 +295,11 @@ public final class TSP {
              writeLog("Run Stats for experiment at: " + currentTime);
              double startTime = System.currentTimeMillis();
              for (int y = 1; y <= runs; y++) {
-               Main main = new Main(Arrays.copyOfRange(cities, 0, cities.length), populationSize, runs);
-             //    genMin = 0;
-             //    print(display,  "Run " + y + "\n");
-             //
-             // // create the initial population of chromosomes
-             //    chromosomes = new Chromosome[populationSize];
-             //    for (int x = 0; x < populationSize; x++) {
-             //       chromosomes[x] = new Chromosome(cities);
-             //       chromosomes[x].shuffleChromosome(cities);
-             //       chromosomes[x].calculateCost(cities);
-             //    }
-             //
-             //    generation = 0;
-             //    double thisCost = 0.0;
-                //Utils.buildMatrix(cities);
-
-                // while (generation < 100) {
-                //    evolve(generation);
-                //    if(generation % 5 == 0 ){
-                //      cities = MoveCities(originalCities); //Move from original cities, so they only move by a maximum of one unit.
-                //      //Utils.buildMatrix(cities);
-                //    }
-                //    generation++;
-                //
-                //    Chromosome.sortChromosomes(chromosomes, populationSize);
-                //    double cost = chromosomes[0].getCost();
-                //    thisCost = cost;
-                //
-                //    if (TSP.DEBUG){
-                //      System.out.printf("CityList best individual: %s", Arrays.toString(chromosomes[0].getCities()));
-                //    }
-                //
-                //    if (thisCost < genMin || genMin == 0) {
-                //       genMin = thisCost;
-                //    }
-                //
-                //    NumberFormat nf = NumberFormat.getInstance();
-                //    nf.setMinimumFractionDigits(2);
-                //    nf.setMinimumFractionDigits(2);
-                //
-                //    print(display, "Gen: " + generation + " Cost: " + (int) thisCost);
-                //
-                //    if(display) {
-                //       updateGUI();
-                //    }
-                // }
-
-
-                writeLog(genMin + "");
-
-                if (genMin > max) {
-                   max = genMin;
-                }
-
-                if (genMin < min || min == 0) {
-                   min = genMin;
-                }
-
-                sum +=  genMin;
-
-                // print(display, "");
+              Main main = new Main(Arrays.copyOfRange(cities, 0, cities.length), populationSize, runs);
+              if (main.getGenMin() > max) max = main.getGenMin();
+              if (main.getGenMin() < min || min == 0) min = main.getGenMin();
+              sum +=  main.getGenMin();
+              writeLog(genMin + "");
              }
 
 

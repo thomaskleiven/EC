@@ -16,31 +16,31 @@ public class SimulatedAnnealing {
     return TSP.randomGenerator.nextInt(1000) / 1000.0;
   }
 
-  public static Chromosome localSearch(Chromosome original, City [] cityList){
+  public static Chromosome localSearch(Chromosome original, City [] cityList, double[][] distanceMatrix){
     double temp = 4;
     double coolingRate = 0.001;
     int[] originalCityIndexes = original.getCities();
 
     Chromosome bestChromosome = new Chromosome(original.getCities());
-    // bestChromosome.setCost(Utils.getDistanceOfTour(originalCityIndexes));
-    //
-    // while (temp > 1){
-    //   int[] newTour = Arrays.copyOfRange(originalCityIndexes, 0, originalCityIndexes.length);
-    //   newTour = Utils.RSM(newTour);
-    //
-    //   double currentDistance = bestChromosome.getCost();
-    //   double neighborDistance = Utils.getDistanceOfTour(newTour);
-    //
-    //   double rand = randomDouble();
-    //   if(acceptanceProbability(currentDistance, neighborDistance, temp) > rand){
-    //     originalCityIndexes = Arrays.copyOfRange(newTour, 0, newTour.length);
-    //
-    //     bestChromosome.setCities(newTour);
-    //     bestChromosome.setCost(Utils.getDistanceOfTour(newTour));
-    //   }
-    //
-    //   temp *= 1 - coolingRate;
-    // }
+    bestChromosome.setCost(Utils.getDistanceOfTour(originalCityIndexes, distanceMatrix));
+
+    while (temp > 1){
+      int[] newTour = Arrays.copyOfRange(originalCityIndexes, 0, originalCityIndexes.length);
+      newTour = Utils.RSM(newTour);
+
+      double currentDistance = bestChromosome.getCost();
+      double neighborDistance = Utils.getDistanceOfTour(newTour, distanceMatrix);
+
+      double rand = randomDouble();
+      if(acceptanceProbability(currentDistance, neighborDistance, temp) > rand){
+        originalCityIndexes = Arrays.copyOfRange(newTour, 0, newTour.length);
+
+        bestChromosome.setCities(newTour);
+        bestChromosome.setCost(Utils.getDistanceOfTour(newTour, distanceMatrix));
+      }
+
+      temp *= 1 - coolingRate;
+    }
 
     return bestChromosome.getCost() < original.getCost() ? bestChromosome : original;
   }
