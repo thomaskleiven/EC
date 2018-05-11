@@ -16,10 +16,11 @@ public class Main{
 
   private double[][] distanceMatrix;
 
-  public Main(City[] cities, int populationSize, int runs){
+  public Main(City[] cities, City[] originalCities, int populationSize, int runs){
     this.cities = cities;
     this.populationSize = populationSize;
     this.distanceMatrix = new double[populationSize][populationSize];
+    this.originalCities = originalCities;
 
     this.run(runs);
   }
@@ -50,15 +51,13 @@ public class Main{
     Utils.buildMatrix(this.cities, this.distanceMatrix);
     Evolution evolution = new Evolution();
 
-    while (generation < 7){
+    while (generation < 100){
       this.chromosomes = evolution.evolve(this.chromosomes, this.cities, generation, this.distanceMatrix);
       if(generation % 5 == 0){
-        this.cities = TSP.MoveCities(this.cities);
+        this.cities = TSP.MoveCities(this.originalCities);
         Utils.buildMatrix(this.cities, this.distanceMatrix);
       }
       generation++;
-
-      System.out.println(this.distanceMatrix[1][2]);
 
       sortChromosomes();
       bestCostCurrentPopulation = chromosomes[0].getCost();
