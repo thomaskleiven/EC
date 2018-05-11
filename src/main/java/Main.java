@@ -50,13 +50,15 @@ public class Main{
     Utils.buildMatrix(this.cities, this.distanceMatrix);
     Evolution evolution = new Evolution();
 
-    while (generation < 100){
+    while (generation < 7){
       this.chromosomes = evolution.evolve(this.chromosomes, this.cities, generation, this.distanceMatrix);
       if(generation % 5 == 0){
         this.cities = TSP.MoveCities(this.cities);
         Utils.buildMatrix(this.cities, this.distanceMatrix);
       }
       generation++;
+
+      System.out.println(this.distanceMatrix[1][2]);
 
       sortChromosomes();
       bestCostCurrentPopulation = chromosomes[0].getCost();
