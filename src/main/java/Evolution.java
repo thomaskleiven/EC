@@ -12,8 +12,6 @@ import java.util.stream.Stream;
 import java.util.Comparator;
 
 class Evolution{
-
-	public static double mutationRate = 0.72;
 	private static int NUM_ELITE = 2;
 
 	/**
@@ -23,7 +21,7 @@ class Evolution{
 	 * @return Mutated chromosome.
 	 */
 	private Chromosome Mutate(Chromosome original, City [] cityList){
- 		  return new Chromosome(Utils.RSM(original.getCities()));
+ 		  return new Chromosome(Mutate.mutateSwap(original.getCities(), 0.03), original.getHistoricalDistances());
    }
 
 
@@ -37,16 +35,17 @@ class Evolution{
       Chromosome [] newPopulation = new Chromosome [population.length];
 
       for (int i = 0; i<population.length; i++){
-				 boolean shouldMutate = TSP.randomGenerator.nextDouble() < mutationRate;
+				 boolean shouldMutate = TSP.randomGenerator.nextDouble() < population[i].getMutationRate();
 				 newPopulation[i] = shouldMutate ?
 				 										Mutate(population[i], cityList) :
-														new Chromosome(population[i].getCities());
+														new Chromosome(population[i].getCities(), population[i].getHistoricalDistances());
 
 				 int partner = TSP.randomGenerator.nextInt(100);
 
-				 Chromosome child = Crossover.nPointCrossover(1, newPopulation[i].getCities(), population[partner].getCities(), distanceMatrix);
+				 Chromosome child = Crossover.nPointCrossover(1, newPopulation[i], population[partner], distanceMatrix, generation);
 				 newPopulation[i] = SimulatedAnnealing.localSearch(child, cityList, distanceMatrix);
 			}
+
 
 			Arrays.sort(newPopulation, (a,b) ->
 				Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));

@@ -5,6 +5,9 @@ import java.util.HashMap;
 
 final class Chromosome {
 
+    private double mutationRate = 0.72;
+    private double[] historicalDistances = new double[10];
+
     /**
      * The list of cities, which are the genes of this chromosome.
      */
@@ -43,10 +46,48 @@ final class Chromosome {
     /**
      * @param cities The order that this chromosome would visit the cities.
      */
-    Chromosome(City[] cities) {}
+    Chromosome(int[] cityOrder, double[] historicalDistances) {
+      this.cityList = cityOrder;
+      this.historicalDistances = historicalDistances;
+    }
 
     Chromosome(int[] cityOrder) {
-      cityList = cityOrder;
+      this.cityList = cityOrder;
+    }
+
+    Chromosome(){}
+
+    public void setMutationRate(double mutationRate){
+      this.mutationRate = mutationRate;
+    }
+
+    public double getMutationRate(){
+      return this.mutationRate;
+    }
+
+    public double[] getHistoricalDistances(){
+      return this.historicalDistances;
+    }
+
+    private void adaptMutationRate(double distance){
+      int num_better = 0;
+      for (int i = 0; i < this.historicalDistances.length; i++){
+        if(distance < this.historicalDistances[i]) num_better++;
+      }
+
+      if(num_better > 2){
+        setMutationRate(getMutationRate() * 0.6);
+      } else {
+        setMutationRate(getMutationRate() / 0.6);
+      }
+    }
+
+    public void addHistoricalDistance(double distance, int index){
+      this.historicalDistances[index%10] = distance;
+
+      if (index > 10){
+        adaptMutationRate(distance);
+      }
     }
 
     void shuffleChromosome(City[] cities) {

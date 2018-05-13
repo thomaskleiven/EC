@@ -21,7 +21,7 @@ public class SimulatedAnnealing {
     double coolingRate = 0.001;
     int[] originalCityIndexes = original.getCities();
 
-    Chromosome bestChromosome = new Chromosome(original.getCities());
+    Chromosome bestChromosome = new Chromosome(original.getCities(), original.getHistoricalDistances());
     bestChromosome.setCost(Utils.getDistanceOfTour(originalCityIndexes, distanceMatrix));
 
     while (temp > 1){

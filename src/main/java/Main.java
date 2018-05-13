@@ -28,7 +28,7 @@ public class Main{
   private void initChromosomes(){
     this.chromosomes = new Chromosome[this.populationSize];
     for (int x = 0; x<this.populationSize; x++){
-      chromosomes[x] = new Chromosome(this.cities);
+      chromosomes[x] = new Chromosome();
       chromosomes[x].shuffleChromosome(this.cities);
       chromosomes[x].calculateCost(this.cities);
     }

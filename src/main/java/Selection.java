@@ -72,7 +72,7 @@ public class Selection{
     Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
 
     for (int i = 0; i < NUM_ELITE; i++){
-      population[population.length-(i+1)] = new Chromosome(population[i].getCities());
+      population[population.length-(i+1)] = new Chromosome(population[i].getCities(), population[i].getHistoricalDistances());
       population[population.length-(i+1)].setCost(population[i].getCost());
     }
 

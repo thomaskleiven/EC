@@ -59,8 +59,11 @@ public class Crossover{
   	 	 * @param p2 city indexes of parent 2
   	 	 * @return new city indexes
   	 	 */
-  	 	public static Chromosome nPointCrossover(int n, int[] p1, int[] p2, double[][] distanceMatrix) {
-  	 		int[] newIndexes = new int[p1.length];
+  	 	public static Chromosome nPointCrossover(int n, Chromosome parent1, Chromosome parent2, double[][] distanceMatrix, int iter) {
+        int[] p1 = parent1.getCities();
+        int[] p2 = parent2.getCities();
+
+        int[] newIndexes = new int[p1.length];
   	 		int[] crossoverPoints = new int[n];
 
   	 		for (int i=0; i<n; i++) {
@@ -105,8 +108,9 @@ public class Crossover{
   	 			swap = true;
   	 		}
 
-  			Chromosome child = new Chromosome(newIndexes);
+  			Chromosome child = new Chromosome(newIndexes, parent1.getHistoricalDistances());
   			child.setCost(Utils.getDistanceOfTour(newIndexes, distanceMatrix));
+        child.addHistoricalDistance(child.getCost(), iter);
 
   	 		return child;
   	 	}
