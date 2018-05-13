@@ -142,6 +142,66 @@ class Evolution{
 		return child;
 	 }
 
+	 /**
+	 	 * Performs N-Point Crossover on two parents. Returning only one child.
+	 	 * @param n number of crossover points
+	 	 * @param p1 city indexes of parent 1
+	 	 * @param p2 city indexes of parent 2
+	 	 * @return new city indexes
+	 	 */
+	 	public static Chromosome nPointCrossover(int n, int[] p1, int[] p2, double[][] distanceMatrix) {
+	 		int[] newIndexes = new int[p1.length];
+	 		int[] crossoverPoints = new int[n];
+
+	 		for (int i=0; i<n; i++) {
+	 			int sampledIndex = 0;
+	 			while(Utils.find(crossoverPoints, sampledIndex) >= 0 || sampledIndex == 0) {
+	 				sampledIndex = TSP.randomGenerator.nextInt(p1.length);
+	 			}
+	 			crossoverPoints[i] = sampledIndex;
+	 		}
+	 		Arrays.sort(crossoverPoints);
+
+	 		boolean swap = false;
+	 		int added = 0; int currIndex = 0;
+	 		int[] arr1 = p1; int[] arr2 = p2;
+
+	 		int counter = 0;
+	 		while (added+1 < newIndexes.length) {
+
+	 			if (swap) {
+	 				arr1 = p2;
+	 				arr2 = p1;
+	 				swap = false;
+	 				currIndex = 0;
+	 			}
+
+	 			for (int i=0; i<p1.length;i++) {
+	 				if (currIndex < crossoverPoints.length) {
+	 					if (i > crossoverPoints[currIndex]) {
+	 						currIndex++;
+	 					}
+	 				}
+
+	 				if (currIndex % 2 == 0 && Utils.find(newIndexes, arr1[i]) < 0) {
+	 					newIndexes[added] = arr1[i];
+	 					added++;
+	 				} else if (currIndex % 2 != 0 && Utils.find(newIndexes, arr2[i]) < 0) {
+	 					newIndexes[added] = arr2[i];
+	 					added++;
+	 				}
+	 			}
+
+	 			swap = true;
+	 		}
+
+			Chromosome child = new Chromosome(newIndexes);
+			child.setCost(Utils.getDistanceOfTour(newIndexes, distanceMatrix));
+
+	 		return child;
+	 	}
+
+
 	/**
 	 * Evolve given population to produce the next generation.
 	 * @param population The population to evolve.
@@ -158,7 +218,8 @@ class Evolution{
 														new Chromosome(population[i].getCities());
 
 				 int partner = TSP.randomGenerator.nextInt(100);
-				 Chromosome child = Breed(newPopulation[i], population[partner], cityList);
+
+				 Chromosome child = nPointCrossover(1, newPopulation[i].getCities(), population[partner].getCities(), distanceMatrix);
 				 newPopulation[i] = SimulatedAnnealing.localSearch(child, cityList, distanceMatrix);
 			}
 
