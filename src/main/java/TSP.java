@@ -296,21 +296,21 @@ public final class TSP {
              writeLog("Run Stats for experiment at: " + currentTime);
              double startTime = System.currentTimeMillis();
 
-             // IntStream.range(0, runs).parallel().forEach(i -> {
-             //   Main main = new Main(Arrays.copyOfRange(cities, 0, cities.length), originalCities, populationSize, runs);
-             //
-             //   if (main.getGenMin() > max) max = main.getGenMin();
-             //   if (main.getGenMin() < min || min == 0) min = main.getGenMin();
-             //   sum +=  main.getGenMin();
-             // });
-
-             for (int i = 0; i < runs; i++){
+             IntStream.range(0, runs).parallel().forEach(i -> {
                Main main = new Main(Arrays.copyOfRange(cities, 0, cities.length), originalCities, populationSize, runs);
-               // System.out.println("Run: " + i);
+
                if (main.getGenMin() > max) max = main.getGenMin();
                if (main.getGenMin() < min || min == 0) min = main.getGenMin();
                sum +=  main.getGenMin();
-             }
+             });
+
+             // for (int i = 0; i < runs; i++){
+             //   Main main = new Main(Arrays.copyOfRange(cities, 0, cities.length), originalCities, populationSize, runs);
+             //   System.out.println("Run: " + i);
+             //   if (main.getGenMin() > max) max = main.getGenMin();
+             //   if (main.getGenMin() < min || min == 0) min = main.getGenMin();
+             //   sum +=  main.getGenMin();
+             // }
 
 
              avg = sum / runs;

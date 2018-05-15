@@ -33,6 +33,10 @@ class Evolution{
 	 */
    public Chromosome [] evolve(Chromosome [] population, City [] cityList, int generation, double[][] distanceMatrix){
       Chromosome [] newPopulation = new Chromosome [population.length];
+			Arrays.sort(population, (a,b) ->
+				Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
+
+			double bestCostInitialPopulation = population[0].getCost();
 
       for (int i = 0; i<population.length; i++){
 				 boolean shouldMutate = TSP.randomGenerator.nextDouble() < population[i].getMutationRate();
@@ -44,13 +48,14 @@ class Evolution{
 
 				 Chromosome child = Crossover.nPointCrossover(1, newPopulation[i], population[partner], distanceMatrix, generation);
 
-				 if (child.getCost() < population[i].getCost() && child.getCost() < population[partner].getCost()) {
+				 if (child.getCost() == bestCostInitialPopulation) {
 					 child = SimulatedAnnealing.localSearch(child, cityList, distanceMatrix);
 					 // child = SA.simulatedAnnealing(2000, 1, 0.9985, child, cityList);
 				 }
 
 				 newPopulation[i] = child;
 			}
+
 
 
 			Arrays.sort(newPopulation, (a,b) ->

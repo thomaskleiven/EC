@@ -65,6 +65,8 @@ public class Main{
       if(bestCostCurrentPopulation < this.genMin || this.genMin == 0){
         this.genMin = bestCostCurrentPopulation;
       }
+
+      // System.out.printf("Gen: %s, cost: %s\n", generation, bestCostCurrentPopulation);
     }
     TSP.writeLog(this.genMin + "");
   }
