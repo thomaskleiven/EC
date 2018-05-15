@@ -16,6 +16,7 @@ public class SimulatedAnnealing {
     return TSP.randomGenerator.nextInt(1000) / 1000.0;
   }
 
+  // Do a localSearch
   public static Chromosome localSearch(Chromosome original, City [] cityList, double[][] distanceMatrix){
     double t0 = 1;
     double temp = t0;

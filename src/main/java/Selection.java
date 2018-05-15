@@ -12,6 +12,7 @@ public class Selection{
 
   private static int NUM_ELITE = 2;
 
+  // Rankedbased selection
   public static Chromosome[] rankedBasedSelection(final Chromosome[] chromosomes){
     List<Pair<Integer, Double>> probabilities = new ArrayList<Pair<Integer, Double>>();
 
@@ -34,6 +35,7 @@ public class Selection{
     return TSP.ELITIST ? eliteSelection(newPopulation, chromosomes) : newPopulation;
   }
 
+  // Get champions
   private static Chromosome[] getChampions(Chromosome[] contestors, int numChampions){
      Arrays.sort(contestors, (a,b) ->
      Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
@@ -41,6 +43,7 @@ public class Selection{
      return Arrays.copyOfRange(contestors, 0, numChampions+1);
   }
 
+  // Get competitors
   private static Chromosome[] getCompetitors(Chromosome[] population, int tournamentSize){
     Chromosome[] competitors = new Chromosome[tournamentSize];
     for (int i = 0; i < tournamentSize; i++){
@@ -50,6 +53,7 @@ public class Selection{
     return competitors;
   }
 
+  // Tournament selection
   public static Chromosome[] tournamentSelection(Chromosome[] population, int tournamentSize, int numChampions){
 
     Chromosome[] newPopulation = new Chromosome[population.length];

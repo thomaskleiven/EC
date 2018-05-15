@@ -45,18 +45,14 @@ class Evolution{
 														new Chromosome(population[i].getCities(), population[i].getHistoricalDistances());
 
 				 int partner = TSP.randomGenerator.nextInt(100);
-
 				 Chromosome child = Crossover.nPointCrossover(1, newPopulation[i], population[partner], distanceMatrix, generation);
 
 				 if (child.getCost() == bestCostInitialPopulation) {
 					 child = SimulatedAnnealing.localSearch(child, cityList, distanceMatrix);
-					 // child = SA.simulatedAnnealing(2000, 1, 0.9985, child, cityList);
 				 }
 
 				 newPopulation[i] = child;
 			}
-
-
 
 			Arrays.sort(newPopulation, (a,b) ->
 				Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
