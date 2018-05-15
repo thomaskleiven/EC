@@ -57,6 +57,12 @@ final class Chromosome {
 
     Chromosome(){}
 
+  Chromosome(int[] cityIndexes, City[] cities,  double[] historicalDistances) {
+     this.cityList = cityIndexes;
+     calculateCost(cities);
+     this.historicalDistances = historicalDistances;
+ }
+
     public void setMutationRate(double mutationRate){
       this.mutationRate = mutationRate;
     }
@@ -121,6 +127,10 @@ final class Chromosome {
         cost += cities[cityList[0]].proximity(cities[cityList[cityList.length - 1]]); //Adding return home
         incrementNumberOfPathLengthCalculations();
 
+    }
+
+    public int[] getCityIndexes(){
+      return this.cityList;
     }
 
     /**

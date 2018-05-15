@@ -43,7 +43,13 @@ class Evolution{
 				 int partner = TSP.randomGenerator.nextInt(100);
 
 				 Chromosome child = Crossover.nPointCrossover(1, newPopulation[i], population[partner], distanceMatrix, generation);
-				 newPopulation[i] = SimulatedAnnealing.localSearch(child, cityList, distanceMatrix);
+
+				 if (child.getCost() < population[i].getCost() && child.getCost() < population[partner].getCost()) {
+					 child = SimulatedAnnealing.localSearch(child, cityList, distanceMatrix);
+					 // child = SA.simulatedAnnealing(2000, 1, 0.9985, child, cityList);
+				 }
+
+				 newPopulation[i] = child;
 			}
 
 

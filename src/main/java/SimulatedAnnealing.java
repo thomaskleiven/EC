@@ -17,31 +17,37 @@ public class SimulatedAnnealing {
   }
 
   public static Chromosome localSearch(Chromosome original, City [] cityList, double[][] distanceMatrix){
-    double temp = 4;
-    double coolingRate = 0.001;
+    double temp = 1;
+    double annealTemp = temp;
+    double coolingRate = 0.9985;
     int[] originalCityIndexes = original.getCities();
 
     Chromosome bestChromosome = new Chromosome(original.getCities(), original.getHistoricalDistances());
     bestChromosome.setCost(Utils.getDistanceOfTour(originalCityIndexes, distanceMatrix));
+    Chromosome candidate = new Chromosome(original.getCityIndexes(), cityList, original.getHistoricalDistances());
+    candidate.setCost(Utils.getDistanceOfTour(originalCityIndexes, distanceMatrix));
 
-    while (temp > 1){
-      int[] newTour = Arrays.copyOfRange(originalCityIndexes, 0, originalCityIndexes.length);
-      newTour = Utils.RSM(newTour);
+    int run = 0;
+    while (run < 2000){
+			int[] mutatedIndexes = Mutate.mutateInversion(candidate.cityList);
+			Chromosome mutatedCandidate = new Chromosome(mutatedIndexes, cityList, original.getHistoricalDistances());
+			annealTemp = temp * Math.pow(coolingRate, run);
 
-      double currentDistance = bestChromosome.getCost();
-      double neighborDistance = Utils.getDistanceOfTour(newTour, distanceMatrix);
+      double currentDistance = candidate.getCost();
+      double neighborDistance = Utils.getDistanceOfTour(mutatedCandidate.getCityIndexes(), distanceMatrix);
 
       double rand = randomDouble();
-      if(acceptanceProbability(currentDistance, neighborDistance, temp) > rand){
-        originalCityIndexes = Arrays.copyOfRange(newTour, 0, newTour.length);
+			if (acceptanceProbability(currentDistance, neighborDistance, temp) > rand) {
+				candidate = new Chromosome(mutatedCandidate.getCityIndexes(), cityList, original.getHistoricalDistances());
 
-        bestChromosome.setCities(newTour);
-        bestChromosome.setCost(Utils.getDistanceOfTour(newTour, distanceMatrix));
-      }
+				if (candidate.getCost() < bestChromosome.getCost()) {
+					bestChromosome = new Chromosome(candidate.getCityIndexes(), cityList, original.getHistoricalDistances());
+          bestChromosome.setCost(candidate.getCost());
+				}
+			}
+			run++;
+		}
 
-      temp *= 1 - coolingRate;
-    }
-
-    return bestChromosome.getCost() < original.getCost() ? bestChromosome : original;
+		return bestChromosome;
   }
 }

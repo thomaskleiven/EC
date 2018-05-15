@@ -21,8 +21,8 @@ public final class TSP {
    private static final int cityShiftAmount = 60; //DO NOT CHANGE THIS.
 
    public static boolean DEBUG = false;
-   public static boolean TOURNAMENT = false;
-   public static boolean ELITIST = false;
+   public static boolean TOURNAMENT = true;
+   public static boolean ELITIST = true;
    public static Scanner scanner = new Scanner(System.in);
    public static Random randomGenerator = new Random();
 
@@ -237,7 +237,7 @@ public final class TSP {
         */
        ClassLoader loader = ClassLoader.getSystemClassLoader();
        loader.setDefaultAssertionStatus(true);
-       randomGenerator.setSeed(0);
+       // randomGenerator.setSeed(0);
 
        DateFormat df = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
        Date today = Calendar.getInstance().getTime();
@@ -306,7 +306,7 @@ public final class TSP {
 
              for (int i = 0; i < runs; i++){
                Main main = new Main(Arrays.copyOfRange(cities, 0, cities.length), originalCities, populationSize, runs);
-               System.out.println("Run: " + i);
+               // System.out.println("Run: " + i);
                if (main.getGenMin() > max) max = main.getGenMin();
                if (main.getGenMin() < min || min == 0) min = main.getGenMin();
                sum +=  main.getGenMin();
