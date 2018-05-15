@@ -45,7 +45,7 @@ public class Crossover{
   		Chromosome child = new Chromosome(cityIndexesParent1);
   		child.calculateCost(cityList);
 
-  		if(Arrays.stream(parent2.getCities()).distinct().count() != 50){
+  		if(Arrays.stream(child.getCities()).distinct().count() != 50){
   			throw new IllegalStateException("Child has not 50 distinct cities");
   		}
 
@@ -111,6 +111,10 @@ public class Crossover{
   			Chromosome child = new Chromosome(newIndexes, parent1.getHistoricalDistances());
   			child.setCost(Utils.getDistanceOfTour(newIndexes, distanceMatrix));
         child.addHistoricalDistance(child.getCost(), iter);
+
+        if(Arrays.stream(child.getCities()).distinct().count() != 50){
+          throw new IllegalStateException("Child has not 50 distinct cities");
+        }
 
   	 		return child;
   	 	}
