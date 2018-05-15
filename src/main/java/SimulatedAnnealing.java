@@ -17,8 +17,8 @@ public class SimulatedAnnealing {
   }
 
   public static Chromosome localSearch(Chromosome original, City [] cityList, double[][] distanceMatrix){
-    double temp = 1;
-    double annealTemp = temp;
+    double t0 = 1;
+    double temp = t0;
     double coolingRate = 0.99;
     int[] originalCityIndexes = original.getCities();
 
@@ -28,24 +28,22 @@ public class SimulatedAnnealing {
     candidate.setCost(Utils.getDistanceOfTour(originalCityIndexes, distanceMatrix));
 
     int run = 0;
-    while (run < 2800){
-			int[] mutatedIndexes = Mutate.mutateInversion(candidate.cityList);
-			Chromosome mutatedCandidate = new Chromosome(mutatedIndexes, cityList, original.getHistoricalDistances());
-			annealTemp = temp * Math.pow(coolingRate, run);
+    while (run < 5000){
+			int[] mutatedIndexes = Mutate.RSM(candidate.cityList);
+			temp = t0 * Math.pow(coolingRate, run++);
 
       double currentDistance = candidate.getCost();
-      double neighborDistance = Utils.getDistanceOfTour(mutatedCandidate.getCityIndexes(), distanceMatrix);
+      double neighborDistance = Utils.getDistanceOfTour(mutatedIndexes, distanceMatrix);
 
       double rand = randomDouble();
 			if (acceptanceProbability(currentDistance, neighborDistance, temp) > rand) {
-				candidate = new Chromosome(mutatedCandidate.getCityIndexes(), cityList, original.getHistoricalDistances());
+				candidate = new Chromosome(mutatedIndexes, cityList, original.getHistoricalDistances());
 
 				if (candidate.getCost() < bestChromosome.getCost()) {
 					bestChromosome = new Chromosome(candidate.getCityIndexes(), cityList, original.getHistoricalDistances());
           bestChromosome.setCost(candidate.getCost());
 				}
 			}
-			run++;
 		}
 
 		return bestChromosome;

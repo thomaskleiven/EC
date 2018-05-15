@@ -21,7 +21,7 @@ class Evolution{
 	 * @return Mutated chromosome.
 	 */
 	private Chromosome Mutate(Chromosome original, City [] cityList){
- 		  return new Chromosome(Mutate.mutateSwap(original.getCities(), 0.03), original.getHistoricalDistances());
+ 		  return new Chromosome(Mutate.RSM(original.getCities()), original.getHistoricalDistances());
    }
 
 

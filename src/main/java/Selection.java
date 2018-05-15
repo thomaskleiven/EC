@@ -31,7 +31,7 @@ public class Selection{
       newPopulation[i] = chromosomes[(int) samples[i]];
     }
 
-    return TSP.ELITIST ? eliteSelection(newPopulation) : newPopulation;
+    return TSP.ELITIST ? eliteSelection(newPopulation, chromosomes) : newPopulation;
   }
 
   private static Chromosome[] getChampions(Chromosome[] contestors, int numChampions){
@@ -41,41 +41,40 @@ public class Selection{
      return Arrays.copyOfRange(contestors, 0, numChampions+1);
   }
 
-  private static Chromosome[] getCompetitors(Chromosome[] population, int[] contestors){
-    Chromosome[] competitors = new Chromosome[contestors.length];
-    for (int i = 0; i < contestors.length; i++){
-      competitors[i] = population[contestors[i]];
+  private static Chromosome[] getCompetitors(Chromosome[] population, int tournamentSize){
+    Chromosome[] competitors = new Chromosome[tournamentSize];
+    for (int i = 0; i < tournamentSize; i++){
+      competitors[i] = population[TSP.randomGenerator.nextInt(50)];
     }
 
     return competitors;
   }
 
   public static Chromosome[] tournamentSelection(Chromosome[] population, int tournamentSize, int numChampions){
-    double[] old_distance = IntStream.range(0,100).mapToDouble(i->population[i].getCost()).toArray();
-    Chromosome[] newPopulation = new Chromosome[population.length];
 
-    for(int i = 0; i < population.length; i+=numChampions){
-      final int[] contestors = TSP.randomGenerator.ints(0, 50).distinct().limit(tournamentSize).toArray();
-      final Chromosome[] competitors = getCompetitors(population, contestors);
-      final Chromosome[] champions = getChampions(competitors, 1);
+    Chromosome[] newPopulation = new Chromosome[population.length];
+    int counter = 0;
+
+    while(true){
+      final Chromosome[] competitors = getCompetitors(population, tournamentSize);
+      final Chromosome[] champions = getChampions(competitors, numChampions);
 
       for(int champ = 0; champ < champions.length; champ++){
-        newPopulation[numChampions == 1 ? i : i+champ] = champions[champ];
+        newPopulation[counter++] = champions[champ];
+        if(counter == population.length) break;
       }
+      if(counter == population.length) break;
     }
 
-    return TSP.ELITIST ? eliteSelection(newPopulation) : newPopulation;
+    return TSP.ELITIST ? eliteSelection(newPopulation, population) : newPopulation;
   }
 
-  private static Chromosome[] eliteSelection(Chromosome[] population){
-    Arrays.sort(population, (a,b) ->
-    Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
-
+  private static Chromosome[] eliteSelection(Chromosome[] newPopulation, Chromosome[] population){
     for (int i = 0; i < NUM_ELITE; i++){
-      population[population.length-(i+1)] = new Chromosome(population[i].getCities(), population[i].getHistoricalDistances());
-      population[population.length-(i+1)].setCost(population[i].getCost());
+      newPopulation[i] = new Chromosome(population[i].cityList, population[i].getHistoricalDistances());
+      newPopulation[i].setCost(population[i].getCost());
     }
 
-    return population;
+    return newPopulation;
   }
 }

@@ -82,9 +82,9 @@ final class Chromosome {
       }
 
       if(num_better > 2){
-        setMutationRate(getMutationRate() * 0.6);
+        setMutationRate(getMutationRate() * 0.75);
       } else {
-        setMutationRate(getMutationRate() / 0.6);
+        setMutationRate(getMutationRate() / 0.75);
       }
     }
 

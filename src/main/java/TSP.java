@@ -20,9 +20,8 @@ public final class TSP {
 
    private static final int cityShiftAmount = 60; //DO NOT CHANGE THIS.
 
-   public static boolean DEBUG = false;
    public static boolean TOURNAMENT = true;
-   public static boolean ELITIST = true;
+   public static boolean ELITIST = false;
    public static Scanner scanner = new Scanner(System.in);
    public static Random randomGenerator = new Random();
 
@@ -237,6 +236,8 @@ public final class TSP {
         */
        ClassLoader loader = ClassLoader.getSystemClassLoader();
        loader.setDefaultAssertionStatus(true);
+
+       // Set seed for repeatability
        // randomGenerator.setSeed(0);
 
        DateFormat df = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
@@ -254,7 +255,6 @@ public final class TSP {
        }
        else {
 
-         if (args.length > 1 && args[1].equals("--debug")) DEBUG=true;
          if (args.length > 1 && args[1].equals("--tournament")) TOURNAMENT=true;
          if (args.length > 1 && args[1].equals("y")) display = true;
          if (args.length > 1 && args[1].equals("--elite")) ELITIST = true;
@@ -296,6 +296,8 @@ public final class TSP {
              writeLog("Run Stats for experiment at: " + currentTime);
              double startTime = System.currentTimeMillis();
 
+
+             // Run this for parallell computation
              IntStream.range(0, runs).parallel().forEach(i -> {
                Main main = new Main(Arrays.copyOfRange(cities, 0, cities.length), originalCities, populationSize, runs);
 
@@ -304,9 +306,11 @@ public final class TSP {
                sum +=  main.getGenMin();
              });
 
+
+             // Run this for non-parallel computation
              // for (int i = 0; i < runs; i++){
              //   Main main = new Main(Arrays.copyOfRange(cities, 0, cities.length), originalCities, populationSize, runs);
-             //   System.out.println("Run: " + i);
+             //   // System.out.println("Run: " + i);
              //   if (main.getGenMin() > max) max = main.getGenMin();
              //   if (main.getGenMin() < min || min == 0) min = main.getGenMin();
              //   sum +=  main.getGenMin();
