@@ -54,6 +54,7 @@ class Evolution{
 				 newPopulation[i] = child;
 			}
 
+			// Sort in order for easier selection procedure
 			Arrays.sort(newPopulation, (a,b) ->
 				Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
 

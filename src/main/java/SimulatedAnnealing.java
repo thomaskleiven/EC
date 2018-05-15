@@ -2,6 +2,13 @@ import java.util.Arrays;
 import java.lang.Math;
 
 public class SimulatedAnnealing {
+  /**
+   * Decide the probability for a solution being accepted
+   * @param double currentDistance
+   * @param double newDistance
+   * @param double temperature
+   * @return The new generation of individuals.
+   */
 
   public static double acceptanceProbability(double currentDistance, double newDistance, double temperature) {
     // If the new solution is better, accept it
@@ -16,7 +23,14 @@ public class SimulatedAnnealing {
     return TSP.randomGenerator.nextInt(1000) / 1000.0;
   }
 
-  // Do a localSearch
+  /**
+   * Do a local search in the child
+   * @param Chromosome The child
+   * @param City The citylist
+   * @param double[][] The precalculated distance matrix
+   * @return The best child
+   */
+
   public static Chromosome localSearch(Chromosome original, City [] cityList, double[][] distanceMatrix){
     double t0 = 1;
     double temp = t0;

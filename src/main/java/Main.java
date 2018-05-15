@@ -27,7 +27,9 @@ public class Main{
     this.run(runs);
   }
 
-  // Initialize chromosomes and shuffle them
+  /**
+	 * Init the chromosomes and shuffle them
+	 */
   private void initChromosomes(){
     this.chromosomes = new Chromosome[this.populationSize];
     for (int x = 0; x<this.populationSize; x++){
@@ -37,7 +39,9 @@ public class Main{
     }
   }
 
-  // Sort this.chromosomes
+  /**
+   * Sort this.chromosomes.
+   */
   private void sortChromosomes(){
     Arrays.sort(this.chromosomes, (a,b) ->
       Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
@@ -46,7 +50,11 @@ public class Main{
   public double getGenMin(){ return this.genMin; };
 
 
-  // Run
+  /**
+	 * Running all the generations.
+	 * @param population The population to evolve.
+	 * @param int runs.
+	 */
   private void run(int runs){
     double startTime = System.currentTimeMillis();
     int generation = 0;

@@ -24,6 +24,11 @@ public class Utils{
     return Math.sqrt(getVariance(data));
   }
 
+  /**
+   * Get the distance of a given tour
+   * @return The accumulated distance
+   */
+
   public static double getDistanceOfTour(int[] tour, double[][] distanceMatrix){
     double neighborDistance = 0;
     for (int i = 0; i < (tour.length-1); i++){
@@ -33,6 +38,12 @@ public class Utils{
 
     return neighborDistance;
   }
+
+  /**
+   * The RSM mutation procedure
+   * @param int cityIndexes
+   * @return cityIndexes.
+   */
 
   public static int[] RSM(int[] cityIndexes){
     int start = TSP.randomGenerator.nextInt(50);
@@ -52,6 +63,12 @@ public class Utils{
 
     return cityIndexes;
   }
+
+  /**
+   * Build the distance matrix
+   * @param City The list of cities
+   * @param double[][] The distance matrix
+   */
 
   public static void buildMatrix(City[] cities, double[][] distanceMatrix){
     for (int from = 0; from < cities.length; from++){
@@ -78,5 +95,5 @@ public class Utils{
 			}
 		}
 		return -1;
-	}  
+	}
 }

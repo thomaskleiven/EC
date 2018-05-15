@@ -12,7 +12,11 @@ public class Selection{
 
   private static int NUM_ELITE = 2;
 
-  // Rankedbased selection
+  /**
+	 * Ranked based selection
+	 * @param chromosome The population to evolve.
+	 * @return The new generation of individuals.
+	 */
   public static Chromosome[] rankedBasedSelection(final Chromosome[] chromosomes){
     List<Pair<Integer, Double>> probabilities = new ArrayList<Pair<Integer, Double>>();
 
@@ -35,7 +39,12 @@ public class Selection{
     return TSP.ELITIST ? eliteSelection(newPopulation, chromosomes) : newPopulation;
   }
 
-  // Get champions
+  /**
+	 * Collect the champions
+	 * @param Chromosome the contestors
+   * @param int numChampions
+	 * @return The chromosomes with best fitness
+	 */
   private static Chromosome[] getChampions(Chromosome[] contestors, int numChampions){
      Arrays.sort(contestors, (a,b) ->
      Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
@@ -43,7 +52,12 @@ public class Selection{
      return Arrays.copyOfRange(contestors, 0, numChampions+1);
   }
 
-  // Get competitors
+  /**
+	 * Collect the competitors
+	 * @param population The population to evolve.
+	 * @param int tournamentSize
+	 * @return The competitos.
+	 */
   private static Chromosome[] getCompetitors(Chromosome[] population, int tournamentSize){
     Chromosome[] competitors = new Chromosome[tournamentSize];
     for (int i = 0; i < tournamentSize; i++){
@@ -53,7 +67,13 @@ public class Selection{
     return competitors;
   }
 
-  // Tournament selection
+  /**
+	 * Tournament selection.
+	 * @param population The population to evolve.
+	 * @param int tournamentSize
+   * @param int numChampions
+	 * @return The new generation of individuals.
+	 */
   public static Chromosome[] tournamentSelection(Chromosome[] population, int tournamentSize, int numChampions){
 
     Chromosome[] newPopulation = new Chromosome[population.length];
@@ -73,6 +93,12 @@ public class Selection{
     return TSP.ELITIST ? eliteSelection(newPopulation, population) : newPopulation;
   }
 
+  /**
+   * The elite selection.
+   * @param newPopulation The new population.
+   * @param population The old sorted population
+   * @return The new generation of individuals.
+   */
   private static Chromosome[] eliteSelection(Chromosome[] newPopulation, Chromosome[] population){
     for (int i = 0; i < NUM_ELITE; i++){
       newPopulation[i] = new Chromosome(population[i].cityList, population[i].getHistoricalDistances());
