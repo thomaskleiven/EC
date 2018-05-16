@@ -240,7 +240,7 @@ public final class TSP {
        loader.setDefaultAssertionStatus(true);
 
        // Set seed for repeatability
-       randomGenerator.setSeed(0);
+       randomGenerator.setSeed(20139);
 
        DateFormat df = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
        Date today = Calendar.getInstance().getTime();
@@ -313,7 +313,6 @@ public final class TSP {
              // Run this for non-parallel computation
              for (int i = 0; i < runs; i++){
                Main main = new Main(Arrays.copyOfRange(cities, 0, cities.length), originalCities, populationSize, runs);
-               // System.out.println("Run: " + i);
                if (main.getGenMin() > max) max = main.getGenMin();
                if (main.getGenMin() < min || min == 0) min = main.getGenMin();
                sum +=  main.getGenMin();
