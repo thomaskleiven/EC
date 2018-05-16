@@ -240,7 +240,7 @@ public final class TSP {
        loader.setDefaultAssertionStatus(true);
 
        // Set seed for repeatability
-       // randomGenerator.setSeed(0);
+       randomGenerator.setSeed(0);
 
        DateFormat df = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
        Date today = Calendar.getInstance().getTime();
