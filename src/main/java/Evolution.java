@@ -49,6 +49,7 @@ class Evolution{
 
 				 if (child.getCost() == bestCostInitialPopulation) {
 					 child = SimulatedAnnealing.localSearch(child, cityList, distanceMatrix);
+					 bestCostInitialPopulation=child.getCost();
 				 }
 
 				 newPopulation[i] = child;
