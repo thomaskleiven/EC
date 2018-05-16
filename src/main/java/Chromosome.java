@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 final class Chromosome {
 
-    private double mutationRate = 0.72;
+    private double mutationRate = 0.8;
     private double[] historicalDistances = new double[10];
 
     /**
@@ -82,9 +82,9 @@ final class Chromosome {
       }
 
       if(num_better > 2){
-        setMutationRate(getMutationRate() * 0.75);
+        setMutationRate(getMutationRate() *0.7);
       } else {
-        setMutationRate(getMutationRate() / 0.75);
+        setMutationRate(getMutationRate() /0.7);
       }
     }
 

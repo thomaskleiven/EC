@@ -10,7 +10,7 @@ import org.apache.commons.math3.util.Pair;
 
 public class Selection{
 
-  private static int NUM_ELITE = 2;
+  private static int NUM_ELITE = 4;
 
   /**
 	 * Ranked based selection

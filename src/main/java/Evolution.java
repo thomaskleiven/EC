@@ -20,8 +20,11 @@ class Evolution{
 	 * @param cityList list of cities, needed to instantiate the new Chromosome.
 	 * @return Mutated chromosome.
 	 */
-	private Chromosome Mutate(Chromosome original, City [] cityList){
- 		  return new Chromosome(Mutate.RSM(original.getCities()), original.getHistoricalDistances());
+	private Chromosome Mutate(Chromosome original, City [] cityList, double[][] distanceMatrix){
+			int[] mutatedIndexes = Mutate.RSM(original.getCities());
+			Chromosome child = new Chromosome(mutatedIndexes, original.getHistoricalDistances());
+			// child.setCost(Utils.getDistanceOfTour(mutatedIndexes, distanceMatrix));
+ 		  return child;
    }
 
 
@@ -36,28 +39,30 @@ class Evolution{
 			Arrays.sort(population, (a,b) ->
 				Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
 
-			double bestCostInitialPopulation = population[0].getCost();
-
       for (int i = 0; i<population.length; i++){
 				 boolean shouldMutate = TSP.randomGenerator.nextDouble() < population[i].getMutationRate();
 				 newPopulation[i] = shouldMutate ?
-				 										Mutate(population[i], cityList) :
+				 										Mutate(population[i], cityList, distanceMatrix) :
 														new Chromosome(population[i].getCities(), population[i].getHistoricalDistances());
 
 				 int partner = TSP.randomGenerator.nextInt(100);
-				 Chromosome child = Crossover.nPointCrossover(1, newPopulation[i], population[partner], distanceMatrix, generation);
+				 boolean shouldCrossover = TSP.randomGenerator.nextDouble() > 0.2 ? true : false;
+				 Chromosome child = shouldCrossover ?
+				 										Crossover.nPointCrossover(1, newPopulation[i], population[partner], distanceMatrix, generation)
+														: new Chromosome(newPopulation[i].getCities(), newPopulation[i].getHistoricalDistances());
 
-				 if (child.getCost() == bestCostInitialPopulation) {
-					 child = SimulatedAnnealing.localSearch(child, cityList, distanceMatrix);
-					 bestCostInitialPopulation=child.getCost();
-				 }
-
+				 child.setCost(Utils.getDistanceOfTour(child.cityList, distanceMatrix));
 				 newPopulation[i] = child;
 			}
 
 			// Sort in order for easier selection procedure
 			Arrays.sort(newPopulation, (a,b) ->
 				Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
+
+			if(population[0].getCost() > newPopulation[0].getCost()){
+				newPopulation[0] = SimulatedAnnealing.localSearch(newPopulation[0], cityList, distanceMatrix);
+				TSP.simCount++;
+			}
 
       return TSP.TOURNAMENT ? Selection.tournamentSelection(newPopulation, 5, 2) : Selection.rankedBasedSelection(newPopulation);
    }

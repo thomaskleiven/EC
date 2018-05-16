@@ -34,7 +34,7 @@ public class SimulatedAnnealing {
   public static Chromosome localSearch(Chromosome original, City [] cityList, double[][] distanceMatrix){
     double t0 = 1;
     double temp = t0;
-    double coolingRate = 0.99;
+    double coolingRate = 0.996;
     int[] originalCityIndexes = original.getCities();
 
     Chromosome bestChromosome = new Chromosome(original.getCities(), original.getHistoricalDistances());
@@ -43,7 +43,7 @@ public class SimulatedAnnealing {
     candidate.setCost(Utils.getDistanceOfTour(originalCityIndexes, distanceMatrix));
 
     int run = 0;
-    while (run < 5000){
+    while (run < 9000){
 			int[] mutatedIndexes = Mutate.RSM(candidate.cityList);
 			temp = t0 * Math.pow(coolingRate, run++);
 

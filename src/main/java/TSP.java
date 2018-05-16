@@ -21,8 +21,9 @@ public final class TSP {
    private static final int cityShiftAmount = 60; //DO NOT CHANGE THIS.
 
    public static boolean TOURNAMENT = true;
-   public static boolean ELITIST = false;
+   public static boolean ELITIST = true;
    public static Scanner scanner = new Scanner(System.in);
+   	public static int simCount = 0;
    public static Random randomGenerator = new Random();
 
     /**
@@ -298,23 +299,23 @@ public final class TSP {
 
 
              // Run this for parallell computation
-             IntStream.range(0, runs).parallel().forEach(i -> {
-               Main main = new Main(Arrays.copyOfRange(cities, 0, cities.length), originalCities, populationSize, runs);
-
-               if (main.getGenMin() > max) max = main.getGenMin();
-               if (main.getGenMin() < min || min == 0) min = main.getGenMin();
-               sum +=  main.getGenMin();
-             });
-
-
-             // Run this for non-parallel computation
-             // for (int i = 0; i < runs; i++){
+             // IntStream.range(0, runs).parallel().forEach(i -> {
              //   Main main = new Main(Arrays.copyOfRange(cities, 0, cities.length), originalCities, populationSize, runs);
-             //   // System.out.println("Run: " + i);
+             //
              //   if (main.getGenMin() > max) max = main.getGenMin();
              //   if (main.getGenMin() < min || min == 0) min = main.getGenMin();
              //   sum +=  main.getGenMin();
-             // }
+             // });
+
+
+             // Run this for non-parallel computation
+             for (int i = 0; i < runs; i++){
+               Main main = new Main(Arrays.copyOfRange(cities, 0, cities.length), originalCities, populationSize, runs);
+               // System.out.println("Run: " + i);
+               if (main.getGenMin() > max) max = main.getGenMin();
+               if (main.getGenMin() < min || min == 0) min = main.getGenMin();
+               sum +=  main.getGenMin();
+             }
 
 
              avg = sum / runs;
@@ -323,6 +324,9 @@ public final class TSP {
              print(display, "Solution found after " + generation + " generations." + "\n");
              print(display, "Statistics of minimum cost from each run \n");
              print(display, "Lowest: " + min + "\nAverage: " + avg + "\nHighest: " + max + "\n");
+
+
+             System.out.printf("Simcount: %s\n", simCount);
 
              System.out.printf("Computational time: %s seconds\n", (double) (System.currentTimeMillis() - startTime) / 1000.0);
           }
