@@ -23,8 +23,9 @@ public final class TSP {
    public static boolean TOURNAMENT = true;
    public static boolean ELITIST = true;
    public static Scanner scanner = new Scanner(System.in);
-   	public static int simCount = 0;
+   public static int simCount = 0;
    public static Random randomGenerator = new Random();
+   public static boolean GUI = false; // Hopefully forever.
 
     /**
      * How many cities to use.
@@ -112,7 +113,7 @@ public final class TSP {
     /*
      *  Deals with printing same content to System.out and GUI
      */
-    private static void print(boolean guiEnabled, String content) {
+    public static void print(boolean guiEnabled, String content) {
        if(guiEnabled) {
           statsText.append(content + "\n");
        }
@@ -267,6 +268,7 @@ public final class TSP {
              runs = Integer.parseInt(args[0]);
 
              if(display) {
+                GUI = true;
                 frame = new JFrame("Traveling Salesman");
                 statsArea = new Panel();
 

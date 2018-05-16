@@ -56,6 +56,7 @@ public class Main{
 	 * @param int runs.
 	 */
   private void run(int runs){
+    Chromosome bestChromosome;
     double startTime = System.currentTimeMillis();
     int generation = 0;
     this.genMin = 0;
@@ -76,8 +77,16 @@ public class Main{
       sortChromosomes();
       bestCostCurrentPopulation = chromosomes[0].getCost();
 
+
+
       if(bestCostCurrentPopulation < this.genMin || this.genMin == 0){
         this.genMin = bestCostCurrentPopulation;
+
+        if(TSP.GUI){
+          TSP.chromosomes = this.chromosomes;
+          TSP.print(true, "Cost: " + this.chromosomes[0].getCost());
+          TSP.updateGUI();
+        }
       }
 
       // System.out.printf("Gen: %s, cost: %s\n", generation, bestCostCurrentPopulation);
