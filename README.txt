@@ -30,7 +30,7 @@ betweeen the fitness results of the two EAs.
 
 The test concludes that the samples are likely drawn
 from the same distributions, i.e. there
-is no significantly difference in the two samples.
+is no statistically significant difference in the two samples.
 
 I am not surprised that there is no statistically significant
 difference between the to EAs, mostly because we
@@ -46,7 +46,7 @@ quite well. I have also implemented the ranked-based-selection and
 swap-mutation, but this works slightly worse compared to
 the aforementioned settings.
 
-I have been following the implementation in
+I have been inspired by the implementation in
 "An improved hybrid genetic algorithm with a new local search procedure"
 by Wan, Wen and Birch, Jeffrey B, which was published by Hindawi in
 Journal of Applied Mathematics in 2013.
@@ -56,3 +56,6 @@ To run the algorithm, go to your terminal and execute the following command:
 
 Example:
 ./gradlew run -PappArgs="[100]"
+
+Alternatively, clone my github-repo master branch and 
+follow the same instructions:
