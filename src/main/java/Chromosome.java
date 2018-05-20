@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 final class Chromosome {
 
+    // Init mutation rate for this chromosome
     private double mutationRate = 0.8;
     private double[] historicalDistances = new double[10];
 
@@ -45,36 +46,32 @@ final class Chromosome {
 
     /**
      * @param cities The order that this chromosome would visit the cities.
+     * @param historicalDistances The previous costs of parent chromosome
      */
     Chromosome(int[] cityOrder, double[] historicalDistances) {
       this.cityList = cityOrder;
       this.historicalDistances = historicalDistances;
     }
 
-    Chromosome(int[] cityOrder) {
-      this.cityList = cityOrder;
-    }
-
+    // Init empty chromosome
     Chromosome(){}
 
-  Chromosome(int[] cityIndexes, City[] cities,  double[] historicalDistances) {
-     this.cityList = cityIndexes;
-     calculateCost(cities);
-     this.historicalDistances = historicalDistances;
- }
-
+    // Set mutation rate
     public void setMutationRate(double mutationRate){
       this.mutationRate = mutationRate;
     }
 
+    // Return mutaiton rate
     public double getMutationRate(){
       return this.mutationRate;
     }
 
+    // Return cost-history for this chromosome
     public double[] getHistoricalDistances(){
       return this.historicalDistances;
     }
 
+    // Adapt mutationrate that allow success to approx 20% for this chromosome
     private void adaptMutationRate(double distance){
       int num_better = 0;
       for (int i = 0; i < this.historicalDistances.length; i++){
@@ -88,6 +85,7 @@ final class Chromosome {
       }
     }
 
+    // Add cost to this chromosome
     public void addHistoricalDistance(double distance, int index){
       this.historicalDistances[index%10] = distance;
 
@@ -96,6 +94,7 @@ final class Chromosome {
       }
     }
 
+    // Shuffle this chromosome
     void shuffleChromosome(City[] cities) {
       cityList = new int[cities.length];
       //cities are visited based on the order of an integer representation [o,n] of each of the n cities.
@@ -141,6 +140,7 @@ final class Chromosome {
         return cost;
     }
 
+    // Set cost for this chromosome
     void setCost(double cost){
       this.cost = cost;
     }

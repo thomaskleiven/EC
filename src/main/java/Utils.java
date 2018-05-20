@@ -3,6 +3,7 @@ import java.util.Arrays;
 
 public class Utils{
 
+  // Get mean of data
   public static double getMean(double[] data){
     double mean = 0.0;
     for (int i = 0; i < data.length; i++) {
@@ -11,6 +12,7 @@ public class Utils{
     return mean /= data.length;
   }
 
+  // Get variance of data
   public static double getVariance(double[] data){
     double variance = 0.0;
     double mean = getMean(data);
@@ -20,6 +22,7 @@ public class Utils{
     return variance /= data.length;
   }
 
+  // Get std of data
   public static double getStd(double[] data){
     return Math.sqrt(getVariance(data));
   }
@@ -34,6 +37,8 @@ public class Utils{
     for (int i = 0; i < (tour.length-1); i++){
       neighborDistance += distanceMatrix[tour[i]][tour[i+1]];
     }
+
+    // Add distance back home
     neighborDistance += distanceMatrix[tour[tour.length-1]][tour[0]];
 
     return neighborDistance;

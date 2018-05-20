@@ -59,11 +59,14 @@ class Evolution{
 			Arrays.sort(newPopulation, (a,b) ->
 				Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
 
+			// Do a local search if best child is also best in parent generation
 			if(population[0].getCost() > newPopulation[0].getCost()){
 				newPopulation[0] = SimulatedAnnealing.localSearch(newPopulation[0], cityList, distanceMatrix);
 				TSP.simCount++;
 			}
 
+
+			// Return tournament selection by default
       return TSP.TOURNAMENT ? Selection.tournamentSelection(newPopulation, 5, 2) : Selection.rankedBasedSelection(newPopulation);
    }
 }

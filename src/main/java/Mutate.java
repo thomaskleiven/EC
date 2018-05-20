@@ -9,9 +9,12 @@ public class Mutate{
 	 * @return mutated vector
 	 */
 	public static int[] RSM(int[] cityIndexes) {
+
+		// Make a deep copy
 		int[] indexes = Arrays.copyOf(cityIndexes, cityIndexes.length);
 
-		int index1=0; int index2=0;
+		int index1=0;
+		int index2=0;
 		while(index1==index2) {
 			index1 = TSP.randomGenerator.nextInt(indexes.length);
 			index2 = TSP.randomGenerator.nextInt(indexes.length);
@@ -24,7 +27,8 @@ public class Mutate{
 			int temp = indexes[start];
 			indexes[start] = indexes[end];
 			indexes[end] = temp;
-			start++; end--;
+			start++;
+			end--;
 		}
 
 		return indexes;

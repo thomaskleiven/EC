@@ -7,7 +7,8 @@ public class Crossover{
 
 
   	 /**
-   	 * Breed two chromosomes to create a offspring
+   	 * Breed two chromosomes to create a offspring, this is the
+     * cycle crossover
    	 * @param parent1 First parent.
    	 * @param parent2 Second parent.
    	 * @param cityList list of cities, needed to instantiate the new Chromosome.
@@ -42,9 +43,10 @@ public class Crossover{
    			cityIndexesParent2[position] = temp[position];
    		}
 
-  		Chromosome child = new Chromosome(cityIndexesParent1);
+  		Chromosome child = new Chromosome(cityIndexesParent1, parent1.getHistoricalDistances());
   		child.calculateCost(cityList);
 
+      // This one is handy
   		if(Arrays.stream(child.getCities()).distinct().count() != 50){
   			throw new IllegalStateException("Child has not 50 distinct cities");
   		}
@@ -109,8 +111,7 @@ public class Crossover{
   	 		}
 
   			Chromosome child = new Chromosome(newIndexes, parent1.getHistoricalDistances());
-  			// child.setCost(Utils.getDistanceOfTour(newIndexes, distanceMatrix));
-        // child.addHistoricalDistance(child.getCost(), iter);
+  			child.setCost(Utils.getDistanceOfTour(newIndexes, distanceMatrix));
 
         if(Arrays.stream(child.getCities()).distinct().count() != 50){
           throw new IllegalStateException("Child has not 50 distinct cities");

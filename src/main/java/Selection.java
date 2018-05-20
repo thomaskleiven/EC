@@ -10,6 +10,7 @@ import org.apache.commons.math3.util.Pair;
 
 public class Selection{
 
+  // Number of individuals to pass on to next gen. automatically
   private static int NUM_ELITE = 4;
 
   /**
@@ -25,6 +26,7 @@ public class Selection{
       probabilities.add(new Pair<Integer,Double>(i, probability));
     }
 
+    // Normalizes probabilities in constructor
     final EnumeratedDistribution<Integer> probabilityDistribution =
      new EnumeratedDistribution<Integer> (probabilities);
 

@@ -7,7 +7,7 @@ one run requires about 0.16 seconds.
 
 When running on four cores using Java, I can achieve a speed-up of
 approx. 80%. When parallellising in bash the algorithm runs
-in approx. 8secs. The speed-up in bash vs. Java's parallel
+in approx. 8 secs. The speed-up in bash vs. Java's parallel
 stream is most likely due to less communication between cores when using
 bash.
 
@@ -37,9 +37,9 @@ difference between the to EAs, mostly because we
 have been working together and we have basically implemented
 the same algorithm, i.e. currently we use the
 same cross-over-rate, mutation-rate, tournament selection,
-inverse mutation, local search algorithm, etc.
+inverse mutation, local search algorithm, adaptive mutation rate, etc.
 
-I have done a lot of experimenting where we have tried
+I have done a lot of experimenting where I have tried
 different procedures and I have found that
 tournament selection and the inverse mutation works
 quite well. I have also implemented the ranked-based-selection and
@@ -57,5 +57,19 @@ To run the algorithm, go to your terminal and execute the following command:
 Example:
 ./gradlew run -PappArgs="[100]"
 
-Alternatively, clone my github-repo master branch and 
-follow the same instructions:
+To run the Python3-script, run:
+  - To plot the distribution with an overlay of the normal distribution curve, run:
+
+      python3 ks.py [filename1] --normal
+
+      Example:
+      python3 ks.py results_thomas.out --normal
+
+  - To run the KS-test for two datasets, run:
+
+      python3 ks.py results_thomas.out results_halvor.out --ks-test
+
+  - To run the 2-sampled Student-t test for two datasets, given
+    that they both are normally distributed, run:
+
+      python3 ks.py results_thomas.out results_halvor.out --normal

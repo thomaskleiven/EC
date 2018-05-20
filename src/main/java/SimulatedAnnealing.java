@@ -39,7 +39,7 @@ public class SimulatedAnnealing {
 
     Chromosome bestChromosome = new Chromosome(original.getCities(), original.getHistoricalDistances());
     bestChromosome.setCost(Utils.getDistanceOfTour(originalCityIndexes, distanceMatrix));
-    Chromosome candidate = new Chromosome(original.getCityIndexes(), cityList, original.getHistoricalDistances());
+    Chromosome candidate = new Chromosome(original.getCityIndexes(), original.getHistoricalDistances());
     candidate.setCost(Utils.getDistanceOfTour(originalCityIndexes, distanceMatrix));
 
     int run = 0;
@@ -52,10 +52,11 @@ public class SimulatedAnnealing {
 
       double rand = randomDouble();
 			if (acceptanceProbability(currentDistance, neighborDistance, temp) > rand) {
-				candidate = new Chromosome(mutatedIndexes, cityList, original.getHistoricalDistances());
+				candidate = new Chromosome(mutatedIndexes, original.getHistoricalDistances());
+        candidate.setCost(neighborDistance);
 
 				if (candidate.getCost() < bestChromosome.getCost()) {
-					bestChromosome = new Chromosome(candidate.getCityIndexes(), cityList, original.getHistoricalDistances());
+					bestChromosome = new Chromosome(candidate.getCityIndexes(), original.getHistoricalDistances());
           bestChromosome.setCost(candidate.getCost());
 				}
 			}

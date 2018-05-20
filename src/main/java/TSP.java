@@ -23,7 +23,7 @@ public final class TSP {
    public static boolean TOURNAMENT = true;
    public static boolean ELITIST = true;
    public static Scanner scanner = new Scanner(System.in);
-   public static int simCount = 0;
+   public static int simCount = 0; // Number of local search
    public static Random randomGenerator = new Random();
    public static boolean GUI = false; // Hopefully forever.
 
@@ -240,7 +240,7 @@ public final class TSP {
        loader.setDefaultAssertionStatus(true);
 
        // Set seed for repeatability
-       randomGenerator.setSeed(20139);
+       randomGenerator.setSeed(20139); // Random seed
 
        DateFormat df = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
        Date today = Calendar.getInstance().getTime();
@@ -301,6 +301,7 @@ public final class TSP {
 
 
              // Run this for parallell computation
+
              // IntStream.range(0, runs).parallel().forEach(i -> {
              //   Main main = new Main(Arrays.copyOfRange(cities, 0, cities.length), originalCities, populationSize, runs);
              //
