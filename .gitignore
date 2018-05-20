@@ -1,6 +1,5 @@
-*.py
 *.class
-/build
-gradle-user-home/
-./gradle/
+build/
 .gradle
+
+*.jar
