@@ -13,4 +13,4 @@ You can't modify the Chromosome class but it has a dictionary **"metaData"** for
 ./gradlew run -PappArgs="[number_of_runs]"
 
 # Example
-./gradlew run -PappArgs="[number_of_runs]"
+./gradlew run -PappArgs="[100]"
