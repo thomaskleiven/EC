@@ -1,12 +1,14 @@
 EC - Assignment - THOMAS KLEIVEN - KLVTHO001
 
-I have compared my results with Halvor Reiten - RTNHLV001. My algorithm runs
+I have compared my results with Halvor Reiten - RTNHLV001.
+
+My algorithm runs
 in approx. 16 seconds on one core on a 2010 Dell Latitude,
 Intel Core i5 (4th Gen) 4300U / 1.9 GHz and 8GB RAM. That is,
 one run requires about 0.16 seconds.
 
 When running on four cores using Java, I can achieve a speed-up of
-approx. 80%. When parallellising in bash the algorithm runs
+approx. 80%. When parallelizing in bash the algorithm runs
 in approx. 8 secs. The speed-up in bash vs. Java's parallel
 stream is most likely due to less communication between cores when using
 bash.
@@ -21,19 +23,18 @@ Best  : 2381
 Mean  : 2769
 Worst : 2955
 
-The statistical tests applied to the resulting dataset can
+The statistical tests applied to the final dataset can
 be seen in the "ks.py" file. Numpy's normality test claims that
 my dataset is most likely not normally distributed, thus
-I chose the Kolmogorov-Smirnov statistic test in order
+I chose the Kolmogorov-Smirnov test in order
 to determine if there is any statistically significant difference
 betweeen the fitness results of the two EAs.
 
-The test concludes that the samples are likely drawn
-from the same distributions, i.e. there
+The test concludes that our final datasets are likely drawn
+from the same distribution, i.e. there
 is no statistically significant difference in the two samples.
 
-I am not surprised that there is no statistically significant
-difference between the to EAs, mostly because we
+I believe that there is no significant difference because we
 have been working together and we have basically implemented
 the same algorithm, i.e. currently we use the
 same cross-over-rate, mutation-rate, tournament selection,
@@ -58,7 +59,8 @@ Example:
 ./gradlew run -PappArgs="[100]"
 
 To run the Python3-script, run:
-  - To plot the distribution with an overlay of the normal distribution curve, run:
+  - To plot the distribution with an overlay of the corresponding
+    normal distribution curve, run:
 
       python3 ks.py [filename1] --normal
 
@@ -73,3 +75,8 @@ To run the Python3-script, run:
     that they both are normally distributed, run:
 
       python3 ks.py results_thomas.out results_halvor.out --normal
+
+To parallelize the hybrid-genetic-algorithm in bash, see the file run.sh.
+
+Alternatively, clone my github's master branch and follow the instructions:
+https://github.com/thomaskleiven/EC

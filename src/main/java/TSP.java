@@ -96,7 +96,7 @@ public final class TSP {
      * Writing to an output file with the costs.
      */
     public static void writeLog(String content) {
-       String filename = "results_crossover.out";
+       String filename = "results_thomas.out";
        FileWriter out;
 
        try {
