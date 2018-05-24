@@ -14,10 +14,10 @@ public class Selection{
   private static int NUM_ELITE = 4;
 
   /**
-	 * Ranked based selection
-	 * @param chromosome The population to evolve.
-	 * @return The new generation of individuals.
-	 */
+  * Ranked based selection
+  * @param chromosome The population to evolve.
+  * @return The new generation of individuals.
+  */
   public static Chromosome[] rankedBasedSelection(final Chromosome[] chromosomes){
     List<Pair<Integer, Double>> probabilities = new ArrayList<Pair<Integer, Double>>();
 
@@ -28,7 +28,7 @@ public class Selection{
 
     // Normalizes probabilities in constructor
     final EnumeratedDistribution<Integer> probabilityDistribution =
-     new EnumeratedDistribution<Integer> (probabilities);
+    new EnumeratedDistribution<Integer> (probabilities);
 
     probabilityDistribution.reseedRandomGenerator(0);
     Object[] samples = probabilityDistribution.sample(100);
@@ -42,24 +42,24 @@ public class Selection{
   }
 
   /**
-	 * Collect the champions
-	 * @param Chromosome the contestors
-   * @param int numChampions
-	 * @return The chromosomes with best fitness
-	 */
+  * Collect the champions
+  * @param Chromosome the contestors
+  * @param int numChampions
+  * @return The chromosomes with best fitness
+  */
   private static Chromosome[] getChampions(Chromosome[] contestors, int numChampions){
-     Arrays.sort(contestors, (a,b) ->
-     Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
+    Arrays.sort(contestors, (a,b) ->
+    Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
 
-     return Arrays.copyOfRange(contestors, 0, numChampions+1);
+    return Arrays.copyOfRange(contestors, 0, numChampions+1);
   }
 
   /**
-	 * Collect the competitors
-	 * @param population The population to evolve.
-	 * @param int tournamentSize
-	 * @return The competitos.
-	 */
+  * Collect the competitors
+  * @param population The population to evolve.
+  * @param int tournamentSize
+  * @return The competitos.
+  */
   private static Chromosome[] getCompetitors(Chromosome[] population, int tournamentSize){
     Chromosome[] competitors = new Chromosome[tournamentSize];
     for (int i = 0; i < tournamentSize; i++){
@@ -70,12 +70,12 @@ public class Selection{
   }
 
   /**
-	 * Tournament selection.
-	 * @param population The population to evolve.
-	 * @param int tournamentSize
-   * @param int numChampions
-	 * @return The new generation of individuals.
-	 */
+  * Tournament selection.
+  * @param population The population to evolve.
+  * @param int tournamentSize
+  * @param int numChampions
+  * @return The new generation of individuals.
+  */
   public static Chromosome[] tournamentSelection(Chromosome[] population, int tournamentSize, int numChampions){
 
     Chromosome[] newPopulation = new Chromosome[population.length];
@@ -96,11 +96,11 @@ public class Selection{
   }
 
   /**
-   * The elite selection.
-   * @param newPopulation The new population.
-   * @param population The old sorted population
-   * @return The new generation of individuals.
-   */
+  * The elite selection.
+  * @param newPopulation The new population.
+  * @param population The old sorted population
+  * @return The new generation of individuals.
+  */
   private static Chromosome[] eliteSelection(Chromosome[] newPopulation, Chromosome[] population){
     for (int i = 0; i < NUM_ELITE; i++){
       newPopulation[i] = new Chromosome(population[i].cityList, population[i].getHistoricalDistances());

@@ -28,8 +28,8 @@ public class Main{
   }
 
   /**
-	 * Init the chromosomes and shuffle them
-	 */
+  * Init the chromosomes and shuffle them
+  */
   private void initChromosomes(){
     this.chromosomes = new Chromosome[this.populationSize];
     for (int x = 0; x<this.populationSize; x++){
@@ -40,21 +40,21 @@ public class Main{
   }
 
   /**
-   * Sort this.chromosomes.
-   */
+  * Sort this.chromosomes.
+  */
   private void sortChromosomes(){
     Arrays.sort(this.chromosomes, (a,b) ->
-      Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
+    Double.valueOf(a.getCost()).compareTo(Double.valueOf(b.getCost())));
   }
 
   public double getGenMin(){ return this.genMin; };
 
 
   /**
-	 * Running all the generations.
-	 * @param population The population to evolve.
-	 * @param int runs.
-	 */
+  * Running all the generations.
+  * @param population The population to evolve.
+  * @param int runs.
+  */
   private void run(int runs){
     Chromosome bestChromosome;
     double startTime = System.currentTimeMillis();

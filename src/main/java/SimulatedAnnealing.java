@@ -3,12 +3,12 @@ import java.lang.Math;
 
 public class SimulatedAnnealing {
   /**
-   * Decide the probability for a solution being accepted
-   * @param double currentDistance
-   * @param double newDistance
-   * @param double temperature
-   * @return The new generation of individuals.
-   */
+  * Decide the probability for a solution being accepted
+  * @param double currentDistance
+  * @param double newDistance
+  * @param double temperature
+  * @return The new generation of individuals.
+  */
 
   public static double acceptanceProbability(double currentDistance, double newDistance, double temperature) {
     // If the new solution is better, accept it
@@ -24,12 +24,12 @@ public class SimulatedAnnealing {
   }
 
   /**
-   * Do a local search in the child
-   * @param Chromosome The child
-   * @param City The citylist
-   * @param double[][] The precalculated distance matrix
-   * @return The best child
-   */
+  * Do a local search in the child
+  * @param Chromosome The child
+  * @param City The citylist
+  * @param double[][] The precalculated distance matrix
+  * @return The best child
+  */
 
   public static Chromosome localSearch(Chromosome original, City [] cityList, double[][] distanceMatrix){
     double t0 = 1;
@@ -44,24 +44,24 @@ public class SimulatedAnnealing {
 
     int run = 0;
     while (run < 9000){
-			int[] mutatedIndexes = Mutate.RSM(candidate.cityList);
-			temp = t0 * Math.pow(coolingRate, run++);
+      int[] mutatedIndexes = Mutate.RSM(candidate.cityList);
+      temp = t0 * Math.pow(coolingRate, run++);
 
       double currentDistance = candidate.getCost();
       double neighborDistance = Utils.getDistanceOfTour(mutatedIndexes, distanceMatrix);
 
       double rand = randomDouble();
-			if (acceptanceProbability(currentDistance, neighborDistance, temp) > rand) {
-				candidate = new Chromosome(mutatedIndexes, original.getHistoricalDistances());
+      if (acceptanceProbability(currentDistance, neighborDistance, temp) > rand) {
+        candidate = new Chromosome(mutatedIndexes, original.getHistoricalDistances());
         candidate.setCost(neighborDistance);
 
-				if (candidate.getCost() < bestChromosome.getCost()) {
-					bestChromosome = new Chromosome(candidate.getCityIndexes(), original.getHistoricalDistances());
+        if (candidate.getCost() < bestChromosome.getCost()) {
+          bestChromosome = new Chromosome(candidate.getCityIndexes(), original.getHistoricalDistances());
           bestChromosome.setCost(candidate.getCost());
-				}
-			}
-		}
+        }
+      }
+    }
 
-		return bestChromosome;
+    return bestChromosome;
   }
 }

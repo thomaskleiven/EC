@@ -2,12 +2,12 @@ import java.util.Arrays;
 
 public class Mutate{
 
-  /**
-	 * Mutation by sampling two indexes and reversing the order of the
-	 * elements in between them.
-	 * @param cityIndexes the vector of numbers to mutate
-	 * @return mutated vector
-	 */
+	/**
+	* Mutation by sampling two indexes and reversing the order of the
+	* elements in between them.
+	* @param cityIndexes the vector of numbers to mutate
+	* @return mutated vector
+	*/
 	public static int[] RSM(int[] cityIndexes) {
 
 		// Make a deep copy
