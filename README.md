@@ -1,9 +1,9 @@
 # EC-TSP-UCT
-Original code by Geoff Nitschke, with hybrid modifications by Steven Tupper.
+Original code by Geoff Nitschke, with hybrid modifications by Thomas Kleiven.
 
 
-# Run the program
+### Run the program
 ./gradlew run -PappArgs="[number_of_runs]"
 
-# Example
+### Example
 ./gradlew run -PappArgs="[100]"
