@@ -23,6 +23,26 @@ Best  : 2381
 Mean  : 2769
 Worst : 2955
 
+I have been inspired by the implementation in
+"An improved hybrid genetic algorithm with a new local search procedure"
+by Wan, Wen and Birch, Jeffrey B, which was published by Hindawi in
+Journal of Applied Mathematics in 2013.
+
+I have done some adjustment to the framework. In my opinion, the framework is
+more object-oriented now and it is easier to parallelize the code.
+
+################################################################################
+A short summary of the code:
+
+A new Main object is created for each run. The Main object creates a
+an instance of Evolution and this object together with the Main object
+is responsible for evolving the chromosomes for 100 generations.
+This algorithm proposes a novel, simplified, and efficient
+Hybrid Genetic Algorithm with an individual learning procedure that
+performs a local search within a child only when the best offspring (solution)
+in the offspring population is also the best in the current parent population.
+################################################################################
+
 The statistical tests applied to the final dataset can
 be seen in the "ks.py" file. Numpy's normality test claims that
 my dataset is most likely not normally distributed, thus
@@ -32,11 +52,13 @@ betweeen the fitness results of the two EAs.
 
 The test concludes that our final datasets are likely drawn
 from the same distribution, i.e. there
-is no statistically significant difference in the two samples.
+is no statistically significant difference in the two samples. The
+test is performed with a significance level of alpha=0.001.
 
 I believe that there is no significant difference because we
-have been working together and we have basically implemented
-the same algorithm, i.e. currently we use the
+have been working together and we have implemented many of the same
+solutions. Our solution is similar and
+we use almost the
 same cross-over-rate, mutation-rate, tournament selection,
 inverse mutation, local search algorithm, adaptive mutation rate, etc.
 
@@ -46,11 +68,6 @@ tournament selection and the inverse mutation works
 quite well. I have also implemented the ranked-based-selection and
 swap-mutation, but this works slightly worse compared to
 the aforementioned settings.
-
-I have been inspired by the implementation in
-"An improved hybrid genetic algorithm with a new local search procedure"
-by Wan, Wen and Birch, Jeffrey B, which was published by Hindawi in
-Journal of Applied Mathematics in 2013.
 
 To run the algorithm, go to your terminal and execute the following command:
 ./gradlew run -PappArgs="[number_of_runs]"
